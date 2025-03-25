@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"mime"
 	"net/http"
 	"net/smtp"
 	"os"
@@ -47,7 +48,7 @@ func sendAnonymousEmail(message string) error {
 	from := smtpUsername
 	to := []string{recipientEmail}
 
-	subject := "Assunto: Mensagem Anônima"
+	subject := "Assunto: " + mime.QEncoding.Encode("utf-8", "Mensagem Anônima")
 	body := fmt.Sprintf("\n\n%s", message)
 
 	emailMessage := []byte("To: " + recipientEmail + "\r\n" +

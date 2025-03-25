@@ -2,41 +2,95 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Denuncia anonima</title>
+    <title>Denúncia Anônima</title>
+    <link rel="icon" href="similarLogo.png" type="image/x-icon">
     <style>
+        /* Estilo do corpo */
         body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        textarea {
+
+        /* Container do formulário */
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
-            height: 200px;
-            margin-bottom: 10px;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
         }
+
+        /* Título */
+        h1 {
+            font-size: 24px;
+            color: #2D6085;
+            margin-bottom: 20px;
+        }
+
+        /* Estilo da área de texto */
+        textarea {
+            width: 90%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: none;
+            margin-bottom: 15px;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        /* Estilo do botão */
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
+            padding: 12px;
+            background-color: #2D6085;
             color: white;
             border: none;
+            border-radius: 6px;
+            font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1e4768;
+        }
+
+        /* Estilo de mensagens de alerta */
+        .alert {
+            color: #ff0000;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Mensagem Anônima</h1>
-    <textarea id="messageInput" placeholder="Digite sua mensagem aqui..."></textarea>
-    <button onclick="sendMessage()">Enviar Mensagem</button>
+    <div class="container">
+        <h1>Mensagem Anônima</h1>
+        <textarea id="messageInput" placeholder="Digite sua mensagem aqui..."></textarea>
+        <button onclick="sendMessage()">Enviar Mensagem</button>
+        <div id="alertMessage" class="alert"></div>
+    </div>
 
     <script>
         async function sendMessage() {
             const messageInput = document.getElementById('messageInput');
+            const alertMessage = document.getElementById('alertMessage');
             const message = messageInput.value.trim();
 
+            alertMessage.textContent = ''; // Limpar mensagem de alerta
+
             if (!message) {
-                alert('Por favor, digite uma mensagem');
+                alertMessage.textContent = 'Por favor, digite uma mensagem';
                 return;
             }
 
@@ -55,11 +109,11 @@
                     alert('Mensagem enviada com sucesso!');
                     messageInput.value = '';
                 } else {
-                    alert('Erro ao enviar mensagem: ' + result.error);
+                    alertMessage.textContent = 'Erro ao enviar mensagem: ' + result.error;
                 }
             } catch (error) {
                 console.error('Erro:', error);
-                alert('Erro ao conectar com o servidor');
+                alertMessage.textContent = 'Erro ao conectar com o servidor';
             }
         }
     </script>
