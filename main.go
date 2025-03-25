@@ -53,6 +53,7 @@ func sendAnonymousEmail(message string) error {
 
 	emailMessage := []byte("To: " + recipientEmail + "\r\n" +
 		"Subject: " + subject + "\r\n" +
+		"Content-Type: text/plain; charset=UTF-8\r\n" +
 		"\r\n" +
 		body + "\r\n")
 
