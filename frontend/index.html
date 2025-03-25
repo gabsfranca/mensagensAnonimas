@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Denuncia anonima</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mensagem Anônima</h1>
+    <textarea id="messageInput" placeholder="Digite sua mensagem aqui..."></textarea>
+    <button onclick="sendMessage()">Enviar Mensagem</button>
+
+    <script>
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+
+            if (!message) {
+                alert('Por favor, digite uma mensagem');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://192.168.0.109:8080/send-anonymous-message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content: message })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Mensagem enviada com sucesso!');
+                    messageInput.value = '';
+                } else {
+                    alert('Erro ao enviar mensagem: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        }
+    </script>
+</body>
+</html>
