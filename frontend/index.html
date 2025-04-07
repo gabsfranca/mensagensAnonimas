@@ -5,7 +5,6 @@
     <title>Denúncia Anônima</title>
     <link rel="shortcut icon" href="./similarLogo.png" type="image/x-icon">
     <style>
-        /* Estilo do corpo */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f0f0f0;
@@ -17,7 +16,6 @@
             margin: 0;
         }
 
-        /* Container do formulário */
         .container {
             background-color: white;
             border-radius: 8px;
@@ -28,14 +26,12 @@
             text-align: center;
         }
 
-        /* Título */
         h1 {
             font-size: 24px;
             color: #2D6085;
             margin-bottom: 20px;
         }
 
-        /* Estilo da área de texto */
         textarea {
             width: 90%;
             height: 150px;
@@ -49,7 +45,6 @@
             color: #333;
         }
 
-        /* Estilo do botão */
         button {
             width: 100%;
             padding: 12px;
@@ -66,10 +61,36 @@
             background-color: #1e4768;
         }
 
-        /* Estilo de mensagens de alerta */
+        button:disabled {
+            background-color: #7fa5c0;
+            cursor: not-allowed;
+        }
+
         .alert {
             color: #ff0000;
             margin-top: 10px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .button-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -77,7 +98,12 @@
     <div class="container">
         <h1>Mensagem Anônima</h1>
         <textarea id="messageInput" placeholder="Digite sua mensagem aqui..."></textarea>
-        <button onclick="sendMessage()">Enviar Mensagem</button>
+        <button id="sendButton" onclick="sendMessage()">
+            <span class="button-content">
+                <span id="buttonText">Enviar Mensagem</span>
+                <span id="loadingSpinner" class="spinner" style="display: none;"></span>
+            </span>
+        </button>
         <div id="alertMessage" class="alert"></div>
     </div>
 
@@ -85,6 +111,9 @@
         async function sendMessage() {
             const messageInput = document.getElementById('messageInput');
             const alertMessage = document.getElementById('alertMessage');
+            const sendButton = document.getElementById('sendButton');
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
             const message = messageInput.value.trim();
 
             alertMessage.textContent = '';
@@ -93,6 +122,10 @@
                 alertMessage.textContent = 'Por favor, digite uma mensagem';
                 return;
             }
+
+            sendButton.disabled = true;
+            buttonText.textContent = 'Enviando';
+            loadingSpinner.style.display = 'inline-block';
 
             try {
                 const response = await fetch('/send-anonymous-message', {
@@ -114,6 +147,10 @@
             } catch (error) {
                 console.error('Erro:', error);
                 alertMessage.textContent = 'Erro ao conectar com o servidor';
+            } finally {
+                sendButton.disabled = false;
+                buttonText.textContent = 'Enviar Mensagem';
+                loadingSpinner.style.display = 'none';
             }
         }
     </script>

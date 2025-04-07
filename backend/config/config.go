@@ -14,8 +14,6 @@ func LoadEnvVars() error {
 	}
 	return nil
 }
-
-// GetEnvVar obtém variável de ambiente, com fallback para valor padrão
 func GetEnvVar(key string) string {
 	value := os.Getenv(key)
 	return value
