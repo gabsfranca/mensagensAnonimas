@@ -21,6 +21,7 @@ func main() {
 		templatePath = "../frontend/index.html"
 	}
 
+	r.Static("/static", "./frontend")
 	r.LoadHTMLFiles(templatePath)
 
 	port := config.GetEnvVar("PORT")

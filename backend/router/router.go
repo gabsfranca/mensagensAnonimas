@@ -39,6 +39,7 @@ func SetupRouter() *gin.Engine {
 			"title": "Mensagem anônima",
 		})
 	})
+	http.Handle("/foto", http.FileServer(http.Dir("./frontend")))
 
 	return r
 
