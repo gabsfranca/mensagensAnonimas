@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/gabsfranca/mensagensAnonimasRH/backend/mail"
+	"github.com/gabsfranca/mensagensAnonimasRH/mail"
 	"github.com/gin-gonic/gin"
 )
 

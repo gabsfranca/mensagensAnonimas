@@ -2,63 +2,32 @@ package main
 
 import (
 	"fmt"
+	"os"
 
-	"github.com/gabsfranca/mensagensAnonimasRH/backend/config"
-	"github.com/gabsfranca/mensagensAnonimasRH/backend/handler"
-	"github.com/gabsfranca/mensagensAnonimasRH/backend/mail"
-	"github.com/gin-gonic/gin"
+	"github.com/gabsfranca/mensagensAnonimasRH/config"
+	"github.com/gabsfranca/mensagensAnonimasRH/router"
 )
 
 func main() {
 	err := config.LoadEnvVars()
 	if err != nil {
 		fmt.Println("Erro .env: ", err)
-		return
 	}
 
-	emailService, err := mail.NewEmailServiceSMTP()
-	if err != nil {
-		fmt.Println("Erro estanciando o servico de email: ", err)
-		return
+	r := router.SetupRouter()
+
+	templatePath := os.Getenv("TEMPLATE_PATH")
+	if templatePath == "" {
+		templatePath = "../frontend/index.html"
 	}
-
-	r := gin.Default()
-
-	templatePath := "C:\\Users\\Gabriel Menegasso\\Desktop\\gabriel\\programas\\trabalhos\\mensagensAnonimas\\teste2\\frontend\\index.html"
 
 	r.LoadHTMLFiles(templatePath)
-
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "index.html", gin.H{
-			"title": "Mensagem anonima",
-		})
-	})
-
-	//middleware
-
-	r.Use(func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
-	})
-
-	r.POST("/send-anonymous-message", func(c *gin.Context) {
-		handler.HandleAnonymousMessage(c, emailService)
-	})
 
 	port := config.GetEnvVar("PORT")
 
 	if port == "" {
 		port = "8080"
 	}
-	fmt.Printf(port)
+	fmt.Printf("Servidor iniciado na porta %s\n", port)
 	r.Run(":" + port)
-
 }
