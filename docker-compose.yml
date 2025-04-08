@@ -5,15 +5,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    environment:
-      - PORT=8080
-      - ENVIRONMENT=development
-      # Configurações SMTP - preencha com seus dados reais para produção
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USERNAME=gamefranca@gmail.com
-      - SMTP_PASSWORD=glwy mexs jgis rraj
-      - RECIPIENT_EMAIL=gabmenegasso@gmail.com
-      # Caminho do template dentro do container
-      - TEMPLATE_PATH=./frontend/index.html
+    env_file:
+      - .env
     restart: unless-stopped
