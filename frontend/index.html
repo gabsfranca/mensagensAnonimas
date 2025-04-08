@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Denúncia Anônima</title>
     <link rel="shortcut icon" href="./similarLogo.png" type="image/x-icon">
     <style>
@@ -20,7 +21,7 @@
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            width: 90%;
             max-width: 400px;
             padding: 20px;
             text-align: center;
@@ -92,6 +93,27 @@
             align-items: center;
             justify-content: center;
         }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            textarea {
+                height: 120px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
     </style>
 </head>
 <body>
