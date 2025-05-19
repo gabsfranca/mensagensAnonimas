@@ -3,52 +3,66 @@ package handler
 import (
 	"log"
 	"net/http"
-	"strings"
+	"time"
 
-	"github.com/gabsfranca/mensagensAnonimasRH/mail"
+	"github.com/gabsfranca/mensagensAnonimasRH/models"
+	"github.com/gabsfranca/mensagensAnonimasRH/repo"
+	"github.com/gabsfranca/mensagensAnonimasRH/service"
+	"github.com/gabsfranca/mensagensAnonimasRH/storage"
 	"github.com/gin-gonic/gin"
 )
 
-type AnonymousMessage struct {
-	Content string `json:"content" binding:"required"`
+type AnonymousMessageHandler struct {
+	ReportRepo repo.ReportRepo
+	MediaRepo  repo.MediaRepo
+	Storage    storage.StorageService
+	Service    *service.AnonymousService
 }
 
-func sanitizeMessage(message string) string {
-	message = strings.TrimSpace(message)
-	if len(message) > 1000 {
-		message = message[:1000]
+func NewAnonymousMessageHandler(rr repo.ReportRepo, mr repo.MediaRepo, storage storage.StorageService) *AnonymousMessageHandler {
+	return &AnonymousMessageHandler{
+		ReportRepo: rr,
+		MediaRepo:  mr,
+		Storage:    storage,
+		Service:    service.NewAnonymousService(storage),
 	}
-	return message
 }
 
-func HandleAnonymousMessage(c *gin.Context, emailService mail.EmailService) {
-	var msg AnonymousMessage
-
-	if err := c.ShouldBindJSON(&msg); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "mensagem invalida",
-		})
-		return
-	}
-
-	msg.Content = sanitizeMessage(msg.Content)
-
-	if msg.Content == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "a mensagem nao pode estar vazia",
-		})
-	}
-
-	err := emailService.SendMail("", msg.Content)
+func (h *AnonymousMessageHandler) Handle(c *gin.Context) {
+	form, err := service.ParseAndValidateForm(c)
 	if err != nil {
-		log.Println("Erro no envio do email: ", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "falha ao enviar email",
-		})
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Mensagem enviada com sucesso!!!",
-	})
+	report := models.Report{
+		Message:   form.Content,
+		Status:    models.Recebido,
+		CreatedAt: form.TimeStamp,
+	}
+
+	if err := h.ReportRepo.Create(c.Request.Context(), &report); err != nil {
+		log.Println("Erro ao salvar denúncia:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "error": "Falha ao salvar denúncia"})
+		return
+	}
+
+	mediaURLs := h.Service.SaveMediaFiles(form.Files)
+
+	for _, url := range mediaURLs {
+		m := models.Media{
+			ReportId:  report.ID,
+			URL:       url,
+			Type:      models.Image,
+			CreatedAt: time.Now(),
+		}
+
+		if err := h.MediaRepo.Create(c.Request.Context(), &m); err != nil {
+			log.Println("falha ao salvar midia: ", err)
+		}
+	}
+
+	updated, _ := h.ReportRepo.FindByID(c.Request.Context(), report.ID)
+
+	c.JSON(http.StatusOK, updated)
 }
