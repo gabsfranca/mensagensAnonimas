@@ -2,6 +2,8 @@ package repo
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/gabsfranca/mensagensAnonimasRH/models"
 	"gorm.io/gorm"
@@ -11,6 +13,7 @@ type ReportRepo interface {
 	Create(ctx context.Context, report *models.Report) error
 	FindAll(ctx context.Context) ([]models.Report, error)
 	FindByID(ctx context.Context, id string) (*models.Report, error)
+	GetObsById(ctx context.Context, id string) (string, error)
 	UpdateStatus(ctx context.Context, id string, status models.Status) error
 	UpdateObs(ctx context.Context, id string, obs string) error
 }
@@ -45,6 +48,26 @@ func (r *GormReportRepo) FindByID(ctx context.Context, id string) (*models.Repor
 		return nil, err
 	}
 	return &report, nil
+}
+
+func (r *GormReportRepo) GetObsById(ctx context.Context, id string) (string, error) {
+	var obs string
+
+	err := r.db.WithContext(ctx).
+		Model(&models.Report{}).
+		Select("obs").
+		Where("id = ?", id).
+		First(&obs).
+		Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return "", fmt.Errorf("Sem observacoes")
+		}
+		return "", fmt.Errorf("erro ao buscar observacao: %v", err)
+	}
+
+	return obs, nil
 }
 
 func (r *GormReportRepo) UpdateStatus(ctx context.Context, id string, status models.Status) error {

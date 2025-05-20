@@ -126,7 +126,7 @@ button:disabled {
 }
 
 .file-upload label::before {
-  content: "📁";
+  content: "📎";
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -222,6 +222,8 @@ button:disabled {
 .main-container {
     display: flex;
     flex-wrap:wrap ;
+    padding-top: 40px;
+    box-sizing: border-box;
     flex-direction: row;
     align-items: center;
     gap: 40px;
@@ -234,7 +236,7 @@ button:disabled {
     flex: 1; /* Permite que os containers cresçam igualmente */
     min-width: 400px; /* Largura mínima antes de quebrar */
     max-width: 500px; /* Largura máxima para manter a legibilidade */
-    margin: 0;
+    margin: 40px 0;
 }
 
 @media (max-width: 480px) {
@@ -253,6 +255,7 @@ button:disabled {
     height: 100px;
   }
   .main-container {
+        padding-top: 20px;
         flex-direction: column;
         align-items: center;
     }
@@ -260,6 +263,7 @@ button:disabled {
   .container, .status-container {
       min-width: 90%;
       max-width: 100%;
+      margin: 10px 0;
   }
 }
 

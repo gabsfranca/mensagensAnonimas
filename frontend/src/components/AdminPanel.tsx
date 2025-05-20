@@ -1,13 +1,21 @@
-import { For, createSignal, onMount, Show, Accessor } from 'solid-js';
+import { For, createSignal, onMount, Show, createEffect } from 'solid-js';
 import { MessageResponse, MessageStatus } from '../types';
 import { Spinner } from './spinner';
 import { fetchMessages, updateMessageStatus, addMessageObs } from '../services/AdminServices';
+import './AdminPanel.css'
 
 export const AdminPanel = () => {
     const [messages, setMessages] = createSignal<MessageResponse[]>([]);
-    const [selectedMessage, setSelectedMessage] = createSignal<MessageResponse | null>(null);
+    const [selectedMessageId, setSelectedMessageId] = createSignal<string | null>(null);
     const [loading, setLoading] = createSignal(true);
     const [error, setError] = createSignal('');
+
+    // Derivado que retorna a mensagem selecionada atualmente
+    const selectedMessage = () => {
+        const id = selectedMessageId();
+        if (!id) return null;
+        return messages().find(m => m.id === id) || null;
+    };
 
     onMount(async () => {
         try {
@@ -21,14 +29,16 @@ export const AdminPanel = () => {
     });
 
     const handleSelectMessage = async (message: MessageResponse) => {
+        // Definir o ID da mensagem selecionada imediatamente
+        setSelectedMessageId(message.id!);
+        
         try {
             if (message.status === 'recebido') {
                 const updated = await updateMessageStatus(message.id!, 'em análise');
                 setMessages(prev => prev.map(m => m.id === updated.id ? updated : m));
-                setSelectedMessage(updated);
-            } else {
-                setSelectedMessage(message);
-            } 
+                // Não é necessário atualizar selectedMessageId aqui, pois nosso
+                // sinal derivado selectedMessage() sempre buscará a versão mais atual
+            }
         } catch (e) {
             setError(`erro ao atualizar status: ${e instanceof Error ? e.message : String(e)}`);
         }
@@ -41,7 +51,7 @@ export const AdminPanel = () => {
         try {
             const updated = await addMessageObs(current.id!, text);
             setMessages(prev => prev.map(m => m.id === updated.id ? updated : m));
-            setSelectedMessage(updated);
+            // O selectedMessage() será atualizado automaticamente
         } catch (e) {
             setError(`erro ao add obs: ${e}`);
         }
@@ -54,7 +64,7 @@ export const AdminPanel = () => {
         try {
             const updated = await updateMessageStatus(current.id!, status);
             setMessages(prev => prev.map(m => m.id === updated.id ? updated : m));
-            setSelectedMessage(updated);
+            // O selectedMessage() será atualizado automaticamente
         } catch (e) {
             setError(`erro ao atualizar status: ${e}`);
         }
@@ -72,7 +82,7 @@ export const AdminPanel = () => {
         <For each={messages()}>
           {(message) => (
             <div 
-              class={`message-card ${selectedMessage()?.id === message.id ? 'selected' : ''}`}
+              class={`message-card ${selectedMessageId() === message.id ? 'selected' : ''}`}
               onClick={() => handleSelectMessage(message)}
             >
               <div class={`status-badge ${message.status.replace(' ', '-')}`}>
@@ -96,10 +106,10 @@ export const AdminPanel = () => {
           when={selectedMessage()} 
           fallback={<div class="empty-state">Selecione uma mensagem</div>}
         >
-          {(msg: Accessor<MessageResponse>) => {
-            const message = msg();
+          {() => {
+            const message = selectedMessage()!;
             return (
-              <>
+              <>  
                 <div class="detail-header">
                   <select
                     value={message.status}
@@ -156,6 +166,8 @@ export const AdminPanel = () => {
                     e.preventDefault();
                     const formData = new FormData(e.currentTarget);
                     handleAddObservation(formData.get('observation') as string);
+                    // Limpar o campo de texto após o envio
+                    (e.target as HTMLFormElement).reset();
                   }}>
                     <textarea
                       name="observation"

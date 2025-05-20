@@ -49,11 +49,11 @@ func (h *AnonymousMessageHandler) Handle(c *gin.Context) {
 
 	mediaURLs := h.Service.SaveMediaFiles(form.Files)
 
-	for _, url := range mediaURLs {
+	for _, media := range mediaURLs {
 		m := models.Media{
 			ReportId:  report.ID,
-			URL:       url,
-			Type:      models.Image,
+			URL:       media.URL,
+			Type:      media.Type,
 			CreatedAt: time.Now(),
 		}
 

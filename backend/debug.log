@@ -1,0 +1,49 @@
+2025/05/20 09:38:36 main.go:45: erro ao iniciar servidor: listen tcp :8080: bind: Normalmente é permitida apenas uma utilização de cada endereço de soquete (protocolo/endereço de rede/porta).
+2025/05/20 09:43:35 router.go:100: req recebida para reports/ff32b171-b1e1-49bc-937b-4edb15cd4e67/status
+2025/05/20 09:43:35 router.go:114: report econtrado: ff32b171-b1e1-49bc-937b-4edb15cd4e67, status: recebido
+2025/05/20 09:44:54 router.go:100: req recebida para reports/ff32b171-b1e1-49bc-937b-4edb15cd4e67/status
+2025/05/20 09:44:54 router.go:114: report econtrado: ff32b171-b1e1-49bc-937b-4edb15cd4e67, status: em análise
+2025/05/20 09:45:11 router.go:100: req recebida para reports/ff32b171-b1e1-49bc-937b-4edb15cd4e67/status
+2025/05/20 09:45:11 router.go:114: report econtrado: ff32b171-b1e1-49bc-937b-4edb15cd4e67, status: concluído
+2025/05/20 09:45:33 router.go:100: req recebida para reports/ff32b171-b1e1-49bc-937b-4edb15cd4e67/status
+2025/05/20 09:45:33 router.go:114: report econtrado: ff32b171-b1e1-49bc-937b-4edb15cd4e67, status: concluído
+2025/05/20 10:37:13 router.go:100: req recebida para reports/0dc2b23b-16ef-4df4-a4bb-7f82602c52ea/status
+2025/05/20 10:37:13 router.go:114: report econtrado: 0dc2b23b-16ef-4df4-a4bb-7f82602c52ea, status: recebido
+2025/05/20 10:38:44 router.go:100: req recebida para reports/0dc2b23b-16ef-4df4-a4bb-7f82602c52ea/status
+2025/05/20 10:38:44 router.go:114: report econtrado: 0dc2b23b-16ef-4df4-a4bb-7f82602c52ea, status: concluído
+2025/05/20 11:30:28 router.go:100: req recebida para reports/ba5d39ce-99fa-439f-9af5-67a11faaa10a/status
+2025/05/20 11:30:28 router.go:114: report econtrado: ba5d39ce-99fa-439f-9af5-67a11faaa10a, status: recebido
+2025/05/20 11:30:28 router.go:127: rota nao encontrada: GET /messages/ba5d39ce-99fa-439f-9af5-67a11faaa10a/obs
+2025/05/20 11:31:04 router.go:100: req recebida para reports/ba5d39ce-99fa-439f-9af5-67a11faaa10a/status
+2025/05/20 11:31:04 router.go:114: report econtrado: ba5d39ce-99fa-439f-9af5-67a11faaa10a, status: em análise
+2025/05/20 11:31:04 router.go:127: rota nao encontrada: GET /messages/ba5d39ce-99fa-439f-9af5-67a11faaa10a/obs
+2025/05/20 11:48:08 router.go:102: req recebida para reports/bc91bf43-cf6f-4a1e-8055-6c4981a542dd/status
+2025/05/20 11:48:08 router.go:116: report econtrado: bc91bf43-cf6f-4a1e-8055-6c4981a542dd, status: recebido
+2025/05/20 11:48:43 router.go:102: req recebida para reports/bc91bf43-cf6f-4a1e-8055-6c4981a542dd/status
+2025/05/20 11:48:43 router.go:116: report econtrado: bc91bf43-cf6f-4a1e-8055-6c4981a542dd, status: em análise
+2025/05/20 11:50:06 router.go:102: req recebida para reports/6047eb70-cead-4f98-98ba-467def38bf59/status
+2025/05/20 11:50:06 router.go:116: report econtrado: 6047eb70-cead-4f98-98ba-467def38bf59, status: recebido
+2025/05/20 11:50:22 router.go:102: req recebida para reports/6047eb70-cead-4f98-98ba-467def38bf59/status
+2025/05/20 11:50:22 router.go:116: report econtrado: 6047eb70-cead-4f98-98ba-467def38bf59, status: em análise
+2025/05/20 11:57:32 router.go:102: req recebida para reports/f40740c2-1b09-45b4-a365-78e5e39a4587/status
+2025/05/20 11:57:32 router.go:116: report econtrado: f40740c2-1b09-45b4-a365-78e5e39a4587, status: recebido
+2025/05/20 11:57:46 router.go:102: req recebida para reports/f40740c2-1b09-45b4-a365-78e5e39a4587/status
+2025/05/20 11:57:46 router.go:116: report econtrado: f40740c2-1b09-45b4-a365-78e5e39a4587, status: em análise
+2025/05/20 11:57:58 router.go:102: req recebida para reports/f40740c2-1b09-45b4-a365-78e5e39a4587/status
+2025/05/20 11:57:58 router.go:116: report econtrado: f40740c2-1b09-45b4-a365-78e5e39a4587, status: em análise
+2025/05/20 11:58:10 router.go:102: req recebida para reports/f40740c2-1b09-45b4-a365-78e5e39a4587/status
+2025/05/20 11:58:10 router.go:116: report econtrado: f40740c2-1b09-45b4-a365-78e5e39a4587, status: em análise
+2025/05/20 13:56:46 router.go:102: req recebida para reports/64ebaa0c-a163-468a-95ba-14c4d6dfaf0f/status
+2025/05/20 13:56:46 router.go:116: report econtrado: 64ebaa0c-a163-468a-95ba-14c4d6dfaf0f, status: recebido
+2025/05/20 13:58:02 router.go:102: req recebida para reports/64ebaa0c-a163-468a-95ba-14c4d6dfaf0f/status
+2025/05/20 13:58:02 router.go:116: report econtrado: 64ebaa0c-a163-468a-95ba-14c4d6dfaf0f, status: concluído
+2025/05/20 15:22:02 router.go:102: req recebida para reports/b6e009d5-0652-46bd-a13d-4e93d92fa63b/status
+2025/05/20 15:22:02 router.go:116: report econtrado: b6e009d5-0652-46bd-a13d-4e93d92fa63b, status: recebido
+2025/05/20 15:26:59 router.go:102: req recebida para reports/a375dc1f-ff52-4cf4-a57e-ef5ddc6e1e61/status
+2025/05/20 15:26:59 router.go:116: report econtrado: a375dc1f-ff52-4cf4-a57e-ef5ddc6e1e61, status: recebido
+2025/05/20 15:27:17 router.go:102: req recebida para reports/a375dc1f-ff52-4cf4-a57e-ef5ddc6e1e61/status
+2025/05/20 15:27:17 router.go:116: report econtrado: a375dc1f-ff52-4cf4-a57e-ef5ddc6e1e61, status: concluído
+2025/05/20 15:43:09 router.go:102: req recebida para reports/e8585689-ebc8-465a-b0fc-a60aa246b5d8/status
+2025/05/20 15:43:09 router.go:116: report econtrado: e8585689-ebc8-465a-b0fc-a60aa246b5d8, status: recebido
+2025/05/20 15:43:48 router.go:102: req recebida para reports/e8585689-ebc8-465a-b0fc-a60aa246b5d8/status
+2025/05/20 15:43:48 router.go:116: report econtrado: e8585689-ebc8-465a-b0fc-a60aa246b5d8, status: concluído

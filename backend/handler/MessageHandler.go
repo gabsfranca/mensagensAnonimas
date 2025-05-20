@@ -35,6 +35,24 @@ func (h *ReportHandler) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, report)
 }
 
+func (h *ReportHandler) GetObs(c *gin.Context) {
+	id := c.Param("id")
+	obs, err := h.Service.GetObs(c.Request.Context(), id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"success": "false",
+			"error":   "Sem observacao",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"obs":     obs,
+	})
+
+}
+
 func (h *ReportHandler) PatchStatus(c *gin.Context) {
 	id := c.Param("id")
 	var body struct {

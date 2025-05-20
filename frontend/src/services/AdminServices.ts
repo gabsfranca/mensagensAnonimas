@@ -65,6 +65,18 @@ export const addMessageObs = async (
     }
 };
 
+export const getMessageObs = async(id: string): Promise<MessageResponse> => {
+    try {
+        const response = await fetch(`http://localhost:8080/messages/${id}/obs`, {
+            method: 'GET',
+        });
+        return handleResponse<MessageResponse>(response);
+    } catch (e) {
+        console.error('falha ao dar get nessa porraaa de observacao: ', e);
+        throw e;
+    }
+}
+
 export const getMessageDetails = async (
     id: string
 ): Promise<MessageResponse> => {

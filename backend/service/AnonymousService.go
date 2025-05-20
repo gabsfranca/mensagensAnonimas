@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gabsfranca/mensagensAnonimasRH/models"
 	"github.com/gabsfranca/mensagensAnonimasRH/storage"
 	"github.com/gin-gonic/gin"
 )
@@ -20,6 +21,11 @@ type MediaUpload struct {
 
 type AnonymousService struct {
 	storage storage.StorageService
+}
+
+type MediaFile struct {
+	URL  string
+	Type models.MediaType
 }
 
 func NewAnonymousService(storage storage.StorageService) *AnonymousService {
@@ -50,8 +56,8 @@ func ParseAndValidateForm(c *gin.Context) (*MediaUpload, error) {
 	}, nil
 }
 
-func (s *AnonymousService) SaveMediaFiles(files []*multipart.FileHeader) []string {
-	var mediaURLs []string
+func (s *AnonymousService) SaveMediaFiles(files []*multipart.FileHeader) []MediaFile {
+	var mediaFiles []MediaFile
 
 	for _, fileHeader := range files {
 		file, err := fileHeader.Open()
@@ -73,9 +79,28 @@ func (s *AnonymousService) SaveMediaFiles(files []*multipart.FileHeader) []strin
 			continue
 		}
 
-		mediaURLs = append(mediaURLs, fileName)
+		mediaType := strings.Split(contentType, "/")[0]
+
+		var mediaTypeEnum models.MediaType
+		switch mediaType {
+		case "image":
+			mediaTypeEnum = models.Image
+		case "video":
+			mediaTypeEnum = models.Video
+		case "audio":
+			mediaTypeEnum = models.Audio
+		default:
+			mediaTypeEnum = models.Image
+		}
+
+		mediaFiles = append(mediaFiles, MediaFile{
+			URL:  fileName,
+			Type: mediaTypeEnum,
+		})
+
+		// mediaURLs = append(mediaURLs, fileName)
 	}
-	return mediaURLs
+	return mediaFiles
 }
 
 func isValidMediaType(contentType string) bool {

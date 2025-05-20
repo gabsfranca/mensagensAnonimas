@@ -1,12 +1,17 @@
 import { createSignal, JSX, } from "solid-js";
+
 import { checkReportStatus } from "../services/statusServices";
+import { getMessageObs } from "../services/AdminServices";
+
 import { Spinner } from "./spinner";
+
 
 export const StatusChecker = (): JSX.Element => {
     const [uuid, setUuid] = createSignal('');
     const [status, setStatus] = createSignal('');
     const [isLoading, setIsLoading] = createSignal(false);
     const [alertMessage, setAlertMessage] = createSignal('');
+    const [obsMessage, setObsMessage] = createSignal('');
 
     const statusSteps = [
         { id: 1, label: 'Recebido', key: 'recebido' },
@@ -22,6 +27,7 @@ export const StatusChecker = (): JSX.Element => {
     const handleCheckStatus = async () => {
         setAlertMessage('');
         setStatus('');
+        setObsMessage('');
 
         if (!uuid()) {
             setAlertMessage('Port favor digite o ID da denuncia');
@@ -41,6 +47,15 @@ export const StatusChecker = (): JSX.Element => {
             if (result.success) {
                 setStatus(result.status!);
                 setAlertMessage('');
+                try {
+                    const obsRes = await getMessageObs(uuid());
+                    if (obsRes) {
+                        setObsMessage(obsRes.obs!);
+                    }
+                } catch (e) {
+                    console.error('erro ao buscar obs: ', e);
+                    setAlertMessage('Sem observacao');
+                }
             } else {
                 setAlertMessage(result.error || 'Erro ao buscar status');
             }
@@ -113,6 +128,14 @@ export const StatusChecker = (): JSX.Element => {
         </div>
         <div class="current-status-message">
           Status atual: <strong>{status()}</strong>
+        </div>
+        <div class="obs-box">
+            {obsMessage() && (
+            <div class='observation-message'>
+                <h3>Observação:</h3>
+                <p>{obsMessage()}</p>
+            </div>
+        )}
         </div>
       </div>
     )}

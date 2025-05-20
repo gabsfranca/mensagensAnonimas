@@ -83,6 +83,8 @@ func SetupRouter() *gin.Engine {
 		grp.GET("", reportHandler.GetAll) // corresponde a GET /messages
 		// GET  /messages/:id           -> detalhes da mensagem
 		grp.GET("/:id", reportHandler.GetByID)
+
+		grp.GET("/:id/obs", reportHandler.GetObs)
 		// PATCH /messages/:id/status   -> atualiza status
 		grp.PATCH("/:id/status", reportHandler.PatchStatus)
 		// POST  /messages/:id/obs      -> adiciona observação
