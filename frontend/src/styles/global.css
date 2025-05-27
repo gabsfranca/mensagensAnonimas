@@ -55,7 +55,7 @@ textarea:focus {
 button {
   width: 100%;
   padding: 0.875rem;
-  background: linear-gradient(to bottom, #102652, #6d28d9);
+  background:#345EAC;
   color: white;
   border: none;
   border-radius: 8px;
@@ -68,7 +68,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background: linear-gradient(to bottom, #102652, #5b21b6);
+  background: #345EAC;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -126,7 +126,7 @@ button:disabled {
 }
 
 .file-upload label::before {
-  content: "📎";
+  content: "📎Anexos";
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -188,7 +188,7 @@ button:disabled {
 .check-button {
     width: 100%;
     padding: 12px;
-    background-color: #2D6085;
+    background-color: #345EAC;
     color: white;
     border: none;
     border-radius: 6px;
@@ -219,6 +219,7 @@ button:disabled {
     color: #2e7d32;
 }
 
+
 .main-container {
     display: flex;
     flex-wrap:wrap ;
@@ -228,7 +229,7 @@ button:disabled {
     align-items: center;
     gap: 40px;
     padding: 20px;
-    min-height: 100vh;
+    min-height: auto;
     align-items: flex-start;
 }
 
@@ -254,11 +255,7 @@ button:disabled {
   textarea {
     height: 100px;
   }
-  .main-container {
-        padding-top: 20px;
-        flex-direction: column;
-        align-items: center;
-    }
+
     
   .container, .status-container {
       min-width: 90%;

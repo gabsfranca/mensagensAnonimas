@@ -4,13 +4,12 @@ import { Spinner } from './spinner';
 import { fetchMessages, updateMessageStatus, addMessageObs } from '../services/AdminServices';
 import './AdminPanel.css'
 
-export const AdminPanel = () => {
+const AdminPanel = () => {
     const [messages, setMessages] = createSignal<MessageResponse[]>([]);
     const [selectedMessageId, setSelectedMessageId] = createSignal<string | null>(null);
     const [loading, setLoading] = createSignal(true);
     const [error, setError] = createSignal('');
 
-    // Derivado que retorna a mensagem selecionada atualmente
     const selectedMessage = () => {
         const id = selectedMessageId();
         if (!id) return null;
@@ -29,15 +28,12 @@ export const AdminPanel = () => {
     });
 
     const handleSelectMessage = async (message: MessageResponse) => {
-        // Definir o ID da mensagem selecionada imediatamente
         setSelectedMessageId(message.id!);
         
         try {
             if (message.status === 'recebido') {
                 const updated = await updateMessageStatus(message.id!, 'em análise');
                 setMessages(prev => prev.map(m => m.id === updated.id ? updated : m));
-                // Não é necessário atualizar selectedMessageId aqui, pois nosso
-                // sinal derivado selectedMessage() sempre buscará a versão mais atual
             }
         } catch (e) {
             setError(`erro ao atualizar status: ${e instanceof Error ? e.message : String(e)}`);
@@ -51,7 +47,6 @@ export const AdminPanel = () => {
         try {
             const updated = await addMessageObs(current.id!, text);
             setMessages(prev => prev.map(m => m.id === updated.id ? updated : m));
-            // O selectedMessage() será atualizado automaticamente
         } catch (e) {
             setError(`erro ao add obs: ${e}`);
         }
@@ -64,7 +59,6 @@ export const AdminPanel = () => {
         try {
             const updated = await updateMessageStatus(current.id!, status);
             setMessages(prev => prev.map(m => m.id === updated.id ? updated : m));
-            // O selectedMessage() será atualizado automaticamente
         } catch (e) {
             setError(`erro ao atualizar status: ${e}`);
         }
@@ -166,7 +160,6 @@ export const AdminPanel = () => {
                     e.preventDefault();
                     const formData = new FormData(e.currentTarget);
                     handleAddObservation(formData.get('observation') as string);
-                    // Limpar o campo de texto após o envio
                     (e.target as HTMLFormElement).reset();
                   }}>
                     <textarea
@@ -201,3 +194,5 @@ export const AdminPanel = () => {
   </div>
 );
 }
+
+export default AdminPanel;

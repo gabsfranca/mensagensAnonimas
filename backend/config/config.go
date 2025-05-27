@@ -10,7 +10,7 @@ import (
 func LoadEnvVars() error {
 	err := godotenv.Load()
 	if err != nil {
-		return fmt.Errorf("Erro ao carregar variaveis de ambiente")
+		return fmt.Errorf("Erro ao carregar variaveis de ambiente: ", err)
 	}
 	return nil
 }

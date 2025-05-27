@@ -1,8 +1,10 @@
 import { MessageResponse } from '../types';
 
+const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
 export const sendAnonymousMessage = async (formData: FormData): Promise<MessageResponse> => {
     try {
-        const response = await fetch('http://localhost:8080/send-anonymous-message', {
+        const response = await fetch(`${URL}/send-anonymous-message`, {
             method: 'POST', 
             body: formData
         });

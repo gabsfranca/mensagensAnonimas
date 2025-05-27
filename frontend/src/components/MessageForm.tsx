@@ -49,8 +49,14 @@ export const MessageForm = (): JSX.Element => {
               alert(
                 `Mensagem enviada com sucesso!\nID copiado para sua área de transferência! Guarde ele, é importante.`
               );
-              navigator.clipboard.writeText(result.id!);
-              setMessage('');
+              if (result.id) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(result.id);
+                } else {
+                    setAlertMessage('erro ao copiar texto para a área de trabalho')
+                }
+              }
+              setMessage(`copie seu código: ${result.id}`);
               setFiles([]);
               setAlertMessage('');
             } else {

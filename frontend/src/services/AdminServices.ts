@@ -5,6 +5,8 @@ interface ApiError {
     statusCode: number;
 }
 
+const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
 const handleResponse = async <T>(response: Response): Promise<T> => {
     if (!response.ok) {
         const error: ApiError = await response.json();
@@ -15,7 +17,7 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
 
 export const fetchMessages = async (): Promise<MessageResponse[]> => {
     try {
-        const response = await fetch('http://localhost:8080/messages', {
+        const response = await fetch(`${URL}/messages`, {
             credentials: 'include'
         });
         return handleResponse<MessageResponse[]>(response);
@@ -30,7 +32,7 @@ export const updateMessageStatus = async (
     status: MessageStatus
 ): Promise<MessageResponse> => {
     try {
-        const response = await fetch(`http://localhost:8080/messages/${id}/status`, {
+        const response = await fetch(`${URL}/messages/${id}/status`, {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',
@@ -50,7 +52,7 @@ export const addMessageObs = async (
     obs: string
 ): Promise<MessageResponse> => {
     try {
-        const response = await fetch(`http://localhost:8080/messages/${id}/obs`, {
+        const response = await fetch(`${URL}/messages/${id}/obs`, {
             method: 'POST', 
             headers: {
                 'Content-Type':'application/json',
@@ -67,7 +69,7 @@ export const addMessageObs = async (
 
 export const getMessageObs = async(id: string): Promise<MessageResponse> => {
     try {
-        const response = await fetch(`http://localhost:8080/messages/${id}/obs`, {
+        const response = await fetch(`${URL}/messages/${id}/obs`, {
             method: 'GET',
         });
         return handleResponse<MessageResponse>(response);
@@ -81,7 +83,7 @@ export const getMessageDetails = async (
     id: string
 ): Promise<MessageResponse> => {
     try{
-        const response = await fetch(`http://localhost:8080/messages/${id}`, {
+        const response = await fetch(`${URL}/messages/${id}`, {
             credentials: 'include'
         });
         return handleResponse<MessageResponse>(response);

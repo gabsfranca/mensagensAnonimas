@@ -47,3 +47,161 @@
 2025/05/20 15:43:09 router.go:116: report econtrado: e8585689-ebc8-465a-b0fc-a60aa246b5d8, status: recebido
 2025/05/20 15:43:48 router.go:102: req recebida para reports/e8585689-ebc8-465a-b0fc-a60aa246b5d8/status
 2025/05/20 15:43:48 router.go:116: report econtrado: e8585689-ebc8-465a-b0fc-a60aa246b5d8, status: concluído
+2025/05/21 09:16:16 main.go:45: erro ao iniciar servidor: listen tcp :8080: bind: Normalmente é permitida apenas uma utilização de cada endereço de soquete (protocolo/endereço de rede/porta).
+2025/05/21 09:17:46 router.go:102: req recebida para reports/84845105-1f8a-46b8-b370-3440f6f7d506/status
+2025/05/21 09:17:46 router.go:116: report econtrado: 84845105-1f8a-46b8-b370-3440f6f7d506, status: recebido
+2025/05/21 15:36:52 router.go:129: rota nao encontrada: POST /register
+2025/05/21 15:43:21 router.go:129: rota nao encontrada: POST /register
+2025/05/21 15:45:05 router.go:129: rota nao encontrada: POST /login
+2025/05/21 15:49:58 router.go:129: rota nao encontrada: GET /registe
+2025/05/21 15:49:58 router.go:129: rota nao encontrada: GET /favicon.ico
+2025/05/21 15:50:01 router.go:129: rota nao encontrada: GET /register
+2025/05/21 15:50:08 router.go:129: rota nao encontrada: GET /login
+2025/05/21 15:50:24 router.go:129: rota nao encontrada: GET /logout
+2025/05/21 15:50:39 router.go:129: rota nao encontrada: GET /send-anonymous-message
+2025/05/21 15:54:36 router.go:73: repos ok
+2025/05/21 15:54:36 router.go:81: services ok
+2025/05/21 15:54:36 router.go:90: handlers ok
+2025/05/21 16:04:15 router.go:73: repos ok
+2025/05/21 16:04:15 router.go:81: services ok
+2025/05/21 16:04:15 router.go:90: handlers ok
+2025/05/21 16:04:59 router.go:73: repos ok
+2025/05/21 16:04:59 router.go:81: services ok
+2025/05/21 16:04:59 router.go:90: handlers ok
+2025/05/21 16:08:50 router.go:73: repos ok
+2025/05/21 16:08:50 router.go:81: services ok
+2025/05/21 16:08:50 router.go:90: handlers ok
+2025/05/21 16:10:57 router.go:73: repos ok
+2025/05/21 16:10:57 router.go:81: services ok
+2025/05/21 16:10:57 router.go:90: handlers ok
+2025/05/21 16:11:21 AuthService.go:22: register chamada
+2025/05/21 16:11:21 AuthService.go:25: erro ao buscar admin: ERRO: não existe a relação "admins" (SQLSTATE 42P01)
+2025/05/21 16:11:21 AuthHandler.go:37: erro ao registrar usuario: ERRO: não existe a relação "admins" (SQLSTATE 42P01)
+2025/05/21 16:12:43 router.go:73: repos ok
+2025/05/21 16:12:43 router.go:81: services ok
+2025/05/21 16:12:43 router.go:90: handlers ok
+2025/05/21 16:13:58 AuthService.go:47: login chamado
+2025/05/21 16:13:58 AuthHandler.go:55: erro no login: email nao cadastrado
+2025/05/21 16:14:56 AuthService.go:22: register chamada
+2025/05/21 16:14:56 AuthService.go:25: erro ao buscar admin: record not found
+2025/05/21 16:14:56 AuthHandler.go:37: erro ao registrar usuario: record not found
+2025/05/21 16:21:16 router.go:73: repos ok
+2025/05/21 16:21:16 router.go:81: services ok
+2025/05/21 16:21:16 router.go:90: handlers ok
+2025/05/21 16:21:43 AuthService.go:22: register chamada
+2025/05/21 16:21:43 AuthService.go:27: email nao encontrado, criando novo admin
+2025/05/21 16:21:43 AuthService.go:40: registro feito com sucesso iupiii
+2025/05/21 16:21:55 AuthService.go:66: login chamado
+2025/05/21 16:21:55 AuthService.go:80: login realiado com sucesso
+2025/05/21 16:23:11 AuthService.go:22: register chamada
+2025/05/21 16:23:11 AuthHandler.go:37: erro ao registrar usuario: admin já cadastrado
+2025/05/21 16:24:27 AuthService.go:22: register chamada
+2025/05/21 16:24:27 AuthService.go:27: email nao encontrado, criando novo admin
+2025/05/21 16:24:27 AuthService.go:40: registro feito com sucesso iupiii
+2025/05/21 16:24:37 AuthService.go:66: login chamado
+2025/05/21 16:24:37 AuthService.go:80: login realiado com sucesso
+2025/05/21 16:27:31 AuthService.go:66: login chamado
+2025/05/21 16:27:31 AuthService.go:80: login realiado com sucesso
+2025/05/21 16:28:44 AuthService.go:22: register chamada
+2025/05/21 16:28:44 AuthService.go:27: email nao encontrado, criando novo admin
+2025/05/21 16:28:44 AuthService.go:40: registro feito com sucesso iupiii
+2025/05/21 16:28:53 AuthService.go:66: login chamado
+2025/05/21 16:28:53 AuthService.go:80: login realiado com sucesso
+2025/05/22 09:15:52 router.go:73: repos ok
+2025/05/22 09:15:52 router.go:81: services ok
+2025/05/22 09:15:52 router.go:90: handlers ok
+2025/05/22 09:15:52 main.go:45: erro ao iniciar servidor: listen tcp :8080: bind: Normalmente é permitida apenas uma utilização de cada endereço de soquete (protocolo/endereço de rede/porta).
+2025/05/22 09:16:40 router.go:73: repos ok
+2025/05/22 09:16:40 router.go:81: services ok
+2025/05/22 09:16:40 router.go:90: handlers ok
+2025/05/22 09:19:06 router.go:124: req recebida para reports/08280fa6-fb45-4832-af8e-7487e6575b5d/status
+2025/05/22 09:19:06 router.go:138: report econtrado: 08280fa6-fb45-4832-af8e-7487e6575b5d, status: recebido
+2025/05/22 09:19:06 AuthMiddleware.go:34: Token nao fornecido
+2025/05/22 09:19:26 router.go:124: req recebida para reports/08280fa6-fb45-4832-af8e-7487e6575b5d/status
+2025/05/22 09:19:26 router.go:138: report econtrado: 08280fa6-fb45-4832-af8e-7487e6575b5d, status: em análise
+2025/05/22 09:19:26 AuthMiddleware.go:34: Token nao fornecido
+2025/05/22 09:19:42 router.go:124: req recebida para reports/08280fa6-fb45-4832-af8e-7487e6575b5d/status
+2025/05/22 09:19:42 router.go:138: report econtrado: 08280fa6-fb45-4832-af8e-7487e6575b5d, status: concluído
+2025/05/22 09:19:42 AuthMiddleware.go:34: Token nao fornecido
+2025/05/22 09:19:55 router.go:124: req recebida para reports/08280fa6-fb45-4832-af8e-7487e6575b5d/status
+2025/05/22 09:19:55 router.go:138: report econtrado: 08280fa6-fb45-4832-af8e-7487e6575b5d, status: concluído
+2025/05/22 09:19:55 AuthMiddleware.go:34: Token nao fornecido
+2025/05/22 09:22:46 router.go:73: repos ok
+2025/05/22 09:22:46 router.go:81: services ok
+2025/05/22 09:22:46 router.go:90: handlers ok
+2025/05/22 09:25:57 router.go:124: req recebida para reports/f057a4fe-fb2e-449c-afa5-1940e8d8b8d0/status
+2025/05/22 09:25:57 router.go:138: report econtrado: f057a4fe-fb2e-449c-afa5-1940e8d8b8d0, status: recebido
+2025/05/22 09:25:57 router.go:151: rota nao encontrada: GET /messages/f057a4fe-fb2e-449c-afa5-1940e8d8b8d0/obs
+2025/05/22 09:26:52 router.go:73: repos ok
+2025/05/22 09:26:52 router.go:81: services ok
+2025/05/22 09:26:52 router.go:90: handlers ok
+2025/05/22 09:27:01 router.go:124: req recebida para reports/f057a4fe-fb2e-449c-afa5-1940e8d8b8d0/status
+2025/05/22 09:27:01 router.go:138: report econtrado: f057a4fe-fb2e-449c-afa5-1940e8d8b8d0, status: recebido
+2025/05/22 09:27:21 router.go:124: req recebida para reports/f057a4fe-fb2e-449c-afa5-1940e8d8b8d0/status
+2025/05/22 09:27:21 router.go:138: report econtrado: f057a4fe-fb2e-449c-afa5-1940e8d8b8d0, status: em análise
+2025/05/22 09:31:08 router.go:124: req recebida para reports/0e9067dc-859b-4539-94b2-3057e2e25afa/status
+2025/05/22 09:31:08 router.go:138: report econtrado: 0e9067dc-859b-4539-94b2-3057e2e25afa, status: recebido
+2025/05/22 09:31:23 AuthService.go:66: login chamado
+2025/05/22 09:31:23 AuthService.go:80: login realiado com sucesso
+2025/05/22 09:31:44 router.go:124: req recebida para reports/0e9067dc-859b-4539-94b2-3057e2e25afa/status
+2025/05/22 09:31:44 router.go:138: report econtrado: 0e9067dc-859b-4539-94b2-3057e2e25afa, status: concluído
+2025/05/22 09:32:02 router.go:124: req recebida para reports/0e9067dc-859b-4539-94b2-3057e2e25afa/status
+2025/05/22 09:32:02 router.go:138: report econtrado: 0e9067dc-859b-4539-94b2-3057e2e25afa, status: concluído
+2025/05/22 09:35:22 router.go:124: req recebida para reports/829fbb36-b189-45af-9e58-53128ebd1fea/status
+2025/05/22 09:35:22 router.go:138: report econtrado: 829fbb36-b189-45af-9e58-53128ebd1fea, status: recebido
+2025/05/22 09:46:39 router.go:73: repos ok
+2025/05/22 09:46:39 router.go:81: services ok
+2025/05/22 09:46:39 router.go:90: handlers ok
+2025/05/22 09:46:45 router.go:124: req recebida para reports/634d84d8-1dfe-4533-af8d-adec74fadd81/status
+2025/05/22 09:46:45 router.go:138: report econtrado: 634d84d8-1dfe-4533-af8d-adec74fadd81, status: recebido
+2025/05/22 10:32:06 router.go:124: req recebida para reports/ce047895-bff0-45f3-9d0d-59400f92f830/status
+2025/05/22 10:32:06 router.go:138: report econtrado: ce047895-bff0-45f3-9d0d-59400f92f830, status: recebido
+2025/05/22 10:32:54 router.go:124: req recebida para reports/ce047895-bff0-45f3-9d0d-59400f92f830/status
+2025/05/22 10:32:54 router.go:138: report econtrado: ce047895-bff0-45f3-9d0d-59400f92f830, status: em análise
+2025/05/23 09:49:06 database.go:42: tentativa 1 de conexão falhou: failed to connect to `host=db user=postgres database=denuncias`: hostname resolving error (lookup db: no such host)
+2025/05/23 09:49:12 database.go:42: tentativa 2 de conexão falhou: failed to connect to `host=db user=postgres database=denuncias`: hostname resolving error (lookup db: no such host)
+2025/05/23 11:00:27 database.go:42: tentativa 1 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:30 database.go:42: tentativa 2 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:33 database.go:42: tentativa 3 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:36 database.go:42: tentativa 4 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:39 database.go:42: tentativa 5 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:42 database.go:42: tentativa 6 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:46 database.go:42: tentativa 7 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:49 database.go:42: tentativa 8 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:52 database.go:42: tentativa 9 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:55 database.go:42: tentativa 10 de conexão falhou: %!s(<nil>)
+2025/05/23 11:00:58 database.go:42: tentativa 11 de conexão falhou: %!s(<nil>)
+2025/05/23 11:01:02 database.go:42: tentativa 12 de conexão falhou: %!s(<nil>)
+2025/05/23 11:01:05 database.go:42: tentativa 13 de conexão falhou: %!s(<nil>)
+2025/05/23 11:01:08 database.go:42: tentativa 14 de conexão falhou: %!s(<nil>)
+2025/05/23 11:01:11 database.go:42: tentativa 15 de conexão falhou: %!s(<nil>)
+2025/05/23 11:01:14 database.go:42: tentativa 16 de conexão falhou: %!s(<nil>)
+2025/05/23 11:01:18 database.go:42: tentativa 17 de conexão falhou: %!s(<nil>)
+2025/05/23 11:01:21 database.go:42: tentativa 18 de conexão falhou: %!s(<nil>)
+2025/05/23 11:01:28 router.go:80: repos ok
+2025/05/23 11:01:28 router.go:88: services ok
+2025/05/23 11:01:28 router.go:97: handlers ok
+2025/05/23 11:01:28 main.go:45: erro ao iniciar servidor: listen tcp :8080: bind: Normalmente é permitida apenas uma utilização de cada endereço de soquete (protocolo/endereço de rede/porta).
+2025/05/23 11:05:58 database.go:42: tentativa 1 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:01 database.go:42: tentativa 2 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:05 database.go:42: tentativa 3 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:08 database.go:42: tentativa 4 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:11 database.go:42: tentativa 5 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:14 database.go:42: tentativa 6 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:17 database.go:42: tentativa 7 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:21 database.go:42: tentativa 8 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:24 database.go:42: tentativa 9 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:27 database.go:42: tentativa 10 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:30 database.go:42: tentativa 11 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:34 database.go:42: tentativa 12 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:37 database.go:42: tentativa 13 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:40 database.go:42: tentativa 14 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:43 database.go:42: tentativa 15 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:46 database.go:42: tentativa 16 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:49 database.go:42: tentativa 17 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:52 database.go:42: tentativa 18 de conexão falhou: %!s(<nil>)
+2025/05/23 11:06:56 router.go:80: repos ok
+2025/05/23 11:06:56 router.go:88: services ok
+2025/05/23 11:06:56 router.go:97: handlers ok
+2025/05/23 11:17:41 router.go:131: req recebida para reports/d91c2d0a-1734-45a5-a23f-b3e4e94de295/status
+2025/05/23 11:17:41 router.go:145: report econtrado: d91c2d0a-1734-45a5-a23f-b3e4e94de295, status: recebido

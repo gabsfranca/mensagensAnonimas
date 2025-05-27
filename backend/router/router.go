@@ -5,8 +5,10 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gabsfranca/mensagensAnonimasRH/config"
 	"github.com/gabsfranca/mensagensAnonimasRH/database"
 	"github.com/gabsfranca/mensagensAnonimasRH/handler"
+	"github.com/gabsfranca/mensagensAnonimasRH/middleware"
 	"github.com/gabsfranca/mensagensAnonimasRH/models"
 	"github.com/gabsfranca/mensagensAnonimasRH/repo"
 	"github.com/gabsfranca/mensagensAnonimasRH/service"
@@ -25,9 +27,11 @@ func SetupRouter() *gin.Engine {
 		fmt.Printf(" %s %s\n", route.Method, route.Path)
 	}
 
+	allowedOrigin := config.GetEnvVar("ALLOWED_ORIGIN")
+
 	allowedOrigins := map[string]bool{
-		"http://localhost:3000":   true,
-		"http://172.23.96.1:3000": true,
+		allowedOrigin:          true,
+		"http://192.168.0.183": true,
 	}
 
 	r.Use(func(c *gin.Context) {
@@ -53,7 +57,27 @@ func SetupRouter() *gin.Engine {
 
 	storageService := storage.NewLocalStorage("./uploads")
 
-	db, err := database.NewPostgresConnection("localhost", "postgres", "senha", "denuncias", "5432")
+	err := config.LoadEnvVars()
+	if err != nil {
+		log.Printf("erro ao carregar .env: %w", err)
+	}
+	// dbHost := config.GetEnvVar("DB_HOST")
+	// dbUser := config.GetEnvVar("DB_USER")
+	// dbPassword := config.GetEnvVar("DB_PASSWORD")
+	// dbDatabase := config.GetEnvVar("DB_DATABASE")
+	// if dbDatabase == "" {
+	// 	dbDatabase = "denuncias"
+	// }
+	// dbPort := config.GetEnvVar("DB_PORT")
+
+	//ESTANCIA BANCO DE DADOS
+	db, err := database.NewPostgresConnection(
+		"db",
+		"postgres",
+		"senha",
+		"denuncias",
+		"5432",
+	)
 
 	if err != nil {
 		log.Fatal("Erro ao conectar no bacno: ", err)
@@ -63,33 +87,54 @@ func SetupRouter() *gin.Engine {
 		log.Fatal("Erro nas migrações", err)
 	}
 
+	//repare que um repo sempre depende de um db
 	reportRepo := repo.NewGormReportRepo(db)
-
 	mediaRepo := repo.NewGormMediaRepo(db)
+	adminRepo := repo.NewGormAdminRepo(db)
 
+	if reportRepo != nil && mediaRepo != nil && adminRepo != nil {
+		log.Printf("repos ok")
+	}
+
+	//um service depende de um repo
 	reportService := service.NewReportService(reportRepo)
+	authService := service.NewAuthService(adminRepo)
 
+	if reportService != nil && authService != nil {
+		log.Printf("services ok")
+	}
+
+	//e um handler depende de um service
 	reportHandler := handler.NewReportHandler(reportService)
-
 	anonymousMessageHander := handler.NewAnonymousMessageHandler(reportRepo, mediaRepo, storageService)
+	authHandler := handler.NewAuthHandler(authService)
+
+	if reportHandler != nil && anonymousMessageHander != nil && authHandler != nil {
+		log.Printf("handlers ok")
+	}
 
 	r.POST("/send-anonymous-message", func(c *gin.Context) {
 		anonymousMessageHander.Handle(c)
 	})
 
-	grp := r.Group("/messages")
+	r.POST("/register", authHandler.Register)
+	r.POST("/login", authHandler.Login)
+	r.POST("/logout", authHandler.Logout)
+
+	adminGroup := r.Group("/messages")
+	adminGroup.Use(middleware.RequireAuth())
 	{
 		// GET  /messages               -> lista todas
-		grp.GET("", reportHandler.GetAll) // corresponde a GET /messages
+		adminGroup.GET("", reportHandler.GetAll) // corresponde a GET /messages
 		// GET  /messages/:id           -> detalhes da mensagem
-		grp.GET("/:id", reportHandler.GetByID)
-
-		grp.GET("/:id/obs", reportHandler.GetObs)
+		adminGroup.GET("/:id", reportHandler.GetByID)
 		// PATCH /messages/:id/status   -> atualiza status
-		grp.PATCH("/:id/status", reportHandler.PatchStatus)
+		adminGroup.PATCH("/:id/status", reportHandler.PatchStatus)
 		// POST  /messages/:id/obs      -> adiciona observação
-		grp.POST("/:id/obs", reportHandler.PostObs)
+		adminGroup.POST("/:id/obs", reportHandler.PostObs)
 	}
+
+	r.GET("/messages/:id/obs", reportHandler.GetObs)
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{

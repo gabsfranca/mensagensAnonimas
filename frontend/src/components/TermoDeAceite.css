@@ -1,0 +1,75 @@
+.termo-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  text-align: justify;
+  line-height: 1.6;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  min-height: 90vh;
+}
+
+/* Títulos */
+.termo-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #111;
+  text-align: center;
+}
+
+.termo-container h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+/* Parágrafos e Listas */
+.termo-container p {
+  margin-bottom: 16px;
+}
+
+.termo-container ul {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+
+.termo-container ul li {
+  margin-bottom: 8px;
+  list-style-type: disc;
+}
+
+.termo-conclusao {
+  font-weight: bold;
+}
+
+/* 🔵 Botão "Prosseguir"
+.botao-prosseguir {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.botao-prosseguir:hover {
+  background-color: #005fa3;
+  transform: scale(1.05);
+}
+
+.botao-prosseguir:active {
+  transform: scale(0.98);
+} */

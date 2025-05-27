@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -43,6 +44,7 @@ func (h *AnonymousMessageHandler) Handle(c *gin.Context) {
 
 	if err := h.ReportRepo.Create(c.Request.Context(), &report); err != nil {
 		log.Println("Erro ao salvar denúncia:", err)
+		fmt.Println("erro ao salvar denuncia: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "error": "Falha ao salvar denúncia"})
 		return
 	}

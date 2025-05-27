@@ -1,11 +1,13 @@
 import { MessageResponse } from "../types";
 
+const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
 export const checkReportStatus = async (uuid: string): Promise<MessageResponse> => {
     try {
 
         console.log('verificando status da denuncia: ', uuid);
 
-        const response = await fetch(`http://localhost:8080/reports/${uuid}/status`, {
+        const response = await fetch(`${URL}/reports/${uuid}/status`, {
             method: 'GET', 
             headers: {
                 'Content-Type': 'application/json',
