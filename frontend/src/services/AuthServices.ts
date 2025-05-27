@@ -10,8 +10,7 @@ interface ErrorReponse {
     details?: string
 }
 
-export async function loginAdmin(email: string, password: string):Promise<Boolean> {
-
+export async function loginAdmin(email: string, password: string): Promise<Boolean> {
     try {
         const response = await fetch(`${URL}/login`, {
             method: "POST", 
@@ -27,7 +26,15 @@ export async function loginAdmin(email: string, password: string):Promise<Boolea
         }
 
         const data: LoginReponse = await response.json();
-        localStorage.setItem("auth_token", data.token);
+        
+        // Garantir que o token seja salvo antes de continuar
+        if (data.token) {
+            localStorage.setItem("auth_token", data.token);
+            console.log("Token salvo:", data.token.substring(0, 20) + "...");
+        } else {
+            console.error("Token não recebido do backend");
+            return false;
+        }
 
         return true;
     } catch (e) {
@@ -84,18 +91,35 @@ export default async function logoutAdmin(): Promise<boolean> {
         return response.ok;
     } catch (e) {
         console.error("erro na requisição de logout: ", e);
+        localStorage.removeItem("auth_token"); // Remove mesmo se der erro
         return false;
     }
 }
 
 export function isAuthenticated(): boolean {
-    return !!localStorage.getItem("auth_token");
+    const token = localStorage.getItem("auth_token");
+    const isAuth = !!token && token.trim() !== '';
+    console.log("Verificando autenticação:", isAuth ? "autenticado" : "não autenticado", token ? `Token: ${token.substring(0, 20)}...` : "Sem token");
+    return isAuth;
 }
 
 export function getAuthHeaders(): HeadersInit {
-    const token = localStorage.getItem("auth_tokem");
+    const token = localStorage.getItem("auth_token");
+    
+    if (!token || token.trim() === '') {
+        console.warn('Token não encontrado no localStorage');
+        throw new Error('Usuário não autenticado');
+    }
+    
+    console.log("Usando token:", token.substring(0, 20) + "...");
+    
     return {
-        "Content-Type":"application/json",
-        "Authorization": token ? `Bearer ${token}` : ""
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
     };
+}
+
+// Nova função para verificar se o token ainda é válido
+export function getTokenSafely(): string | null {
+    return localStorage.getItem("auth_token");
 }
