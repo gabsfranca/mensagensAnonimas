@@ -21,7 +21,7 @@ const TermoDeAceite = ():JSX.Element => {
         colaboradores em geral este <strong>Canal de Confiança</strong> — um meio de comunicação
         independente, seguro e imparcial, destinado ao relato de denúncias anônimas sobre condutas
         que violem ou contrariem as diretrizes estabelecidas no nosso {' '}
-        <a href="/manual-de-procedimentos.docx" target="_blank" rel="noopener noreferrer">
+        <a href="/manual-de-procedimentos.pdf" target="_blank" rel="noopener noreferrer">
             manual de procedimentos
         </a>.
       </p>

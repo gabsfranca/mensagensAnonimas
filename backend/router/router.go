@@ -57,10 +57,6 @@ func SetupRouter() *gin.Engine {
 
 	storageService := storage.NewLocalStorage("./uploads")
 
-	err := config.LoadEnvVars()
-	if err != nil {
-		log.Printf("erro ao carregar .env: %w", err)
-	}
 	// dbHost := config.GetEnvVar("DB_HOST")
 	// dbUser := config.GetEnvVar("DB_USER")
 	// dbPassword := config.GetEnvVar("DB_PASSWORD")
@@ -72,11 +68,11 @@ func SetupRouter() *gin.Engine {
 
 	//ESTANCIA BANCO DE DADOS
 	db, err := database.NewPostgresConnection(
-		"db",
-		"postgres",
-		"senha",
-		"denuncias",
-		"5432",
+		config.GetEnvVar("DB_HOST"),
+		config.GetEnvVar("DB_USER"),
+		config.GetEnvVar("DB_PASSWORD"),
+		config.GetEnvVar("DB_NAME"),
+		config.GetEnvVar("DB_PORT"),
 	)
 
 	if err != nil {
@@ -135,12 +131,6 @@ func SetupRouter() *gin.Engine {
 	}
 
 	r.GET("/messages/:id/obs", reportHandler.GetObs)
-
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "Mensagem anônima",
-		})
-	})
 
 	r.GET("/reports/:id/status", func(c *gin.Context) {
 		id := c.Param("id")

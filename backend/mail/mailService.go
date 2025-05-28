@@ -23,7 +23,6 @@ type EmailServiceSMTP struct {
 // aqui é tipo o constructor
 func NewEmailServiceSMTP() (*EmailServiceSMTP, error) {
 	// Tentar carregar variáveis, mas continuar mesmo se falhar
-	config.LoadEnvVars()
 
 	smtpHost := config.GetEnvVar("SMTP_HOST")
 	smtpPort := config.GetEnvVar("SMTP_PORT")

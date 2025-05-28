@@ -9,9 +9,11 @@ import (
 
 	"github.com/gabsfranca/mensagensAnonimasRH/config"
 	"github.com/gabsfranca/mensagensAnonimasRH/router"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 
 	err := config.LoadEnvVars()
 	if err != nil {
@@ -41,7 +43,6 @@ func main() {
 
 	fmt.Println("verificando rotas registradas")
 
-	config.LoadEnvVars()
 	port := config.GetEnvVar("PORT")
 	if port == "" {
 		port = ":8080"

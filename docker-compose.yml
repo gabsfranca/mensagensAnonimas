@@ -38,6 +38,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: senha
       DB_NAME: denuncias
+      GIN_MODE: release
     networks:
       - app-network
 

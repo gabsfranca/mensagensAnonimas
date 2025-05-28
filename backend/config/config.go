@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -10,11 +11,15 @@ import (
 func LoadEnvVars() error {
 	err := godotenv.Load()
 	if err != nil {
-		return fmt.Errorf("Erro ao carregar variaveis de ambiente: ", err)
+		return fmt.Errorf("Arquivo .env nao encontrado, procurando envvars do docker...")
 	}
-	return nil
+	return err
 }
+
 func GetEnvVar(key string) string {
 	value := os.Getenv(key)
+	if value == "" {
+		log.Printf("variavel de ambeinte %s nao definida", key)
+	}
 	return value
 }

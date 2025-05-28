@@ -9,7 +9,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/media': {
-        target: `http://${backendHost}:8080`,
+        target: `http://${backendHost}`,
         changeOrigin: true, 
         secure: false,
       }
