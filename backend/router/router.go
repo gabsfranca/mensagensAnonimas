@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -14,21 +13,17 @@ import (
 	"github.com/gabsfranca/mensagensAnonimasRH/service"
 	"github.com/gabsfranca/mensagensAnonimasRH/storage"
 	"github.com/gin-gonic/gin"
+	"github.com/go-errors/errors"
 )
 
 func SetupRouter() *gin.Engine {
-	r := gin.New()
+	log.Println("[INFO] Inicializando roteador...")
 
+	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
-	fmt.Println("rotas registradas: ")
-	for _, route := range r.Routes() {
-		fmt.Printf(" %s %s\n", route.Method, route.Path)
-	}
-
-	allowedOrigin := config.GetEnvVar("ALLOWED_ORIGIN")
-
+	allowedOrigin := config.GetEnvVar("URL")
 	allowedOrigins := map[string]bool{
 		allowedOrigin:          true,
 		"http://192.168.0.183": true,
@@ -41,7 +36,6 @@ func SetupRouter() *gin.Engine {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 		}
 
-		// c.Writer.Header().Set("Access-Control-Allow-Origin", ["http://localhost:3000", "http://172.23.96.1:3000"]) // Em desenvolvimento
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
@@ -55,18 +49,10 @@ func SetupRouter() *gin.Engine {
 		c.Next()
 	})
 
+	log.Println("[INFO] Inicializando serviço de armazenamento local...")
 	storageService := storage.NewLocalStorage("./uploads")
 
-	// dbHost := config.GetEnvVar("DB_HOST")
-	// dbUser := config.GetEnvVar("DB_USER")
-	// dbPassword := config.GetEnvVar("DB_PASSWORD")
-	// dbDatabase := config.GetEnvVar("DB_DATABASE")
-	// if dbDatabase == "" {
-	// 	dbDatabase = "denuncias"
-	// }
-	// dbPort := config.GetEnvVar("DB_PORT")
-
-	//ESTANCIA BANCO DE DADOS
+	log.Println("[INFO] Conectando ao banco de dados...")
 	db, err := database.NewPostgresConnection(
 		config.GetEnvVar("DB_HOST"),
 		config.GetEnvVar("DB_USER"),
@@ -74,39 +60,52 @@ func SetupRouter() *gin.Engine {
 		config.GetEnvVar("DB_NAME"),
 		config.GetEnvVar("DB_PORT"),
 	)
-
 	if err != nil {
-		log.Fatal("Erro ao conectar no bacno: ", err)
+		stackErr := errors.Wrap(err, 0)
+		if stackErr != nil {
+			log.Fatalf("[FATAL] Erro ao conectar no banco: %v\nStacktrace:\n%s", err, stackErr.Stack())
+
+		}
 	}
 
+	log.Println("[INFO] Executando migrações do banco de dados...")
 	if err := database.AutoMigrate(db); err != nil {
-		log.Fatal("Erro nas migrações", err)
+		stackErr := errors.Wrap(err, 0)
+		if stackErr != nil {
+			log.Fatalf("[FATAL] Erro nas migrações: %v\nStacktrace:\n%s", err, stackErr.Stack())
+		}
 	}
 
-	//repare que um repo sempre depende de um db
+	log.Println("[INFO] Inicializando repositórios...")
 	reportRepo := repo.NewGormReportRepo(db)
 	mediaRepo := repo.NewGormMediaRepo(db)
 	adminRepo := repo.NewGormAdminRepo(db)
 
-	if reportRepo != nil && mediaRepo != nil && adminRepo != nil {
-		log.Printf("repos ok")
+	if reportRepo == nil || mediaRepo == nil || adminRepo == nil {
+		log.Println("[ERROR] Falha ao instanciar repositórios")
+	} else {
+		log.Println("[INFO] Repositórios inicializados com sucesso")
 	}
 
-	//um service depende de um repo
+	log.Println("[INFO] Inicializando serviços...")
 	reportService := service.NewReportService(reportRepo)
 	authService := service.NewAuthService(adminRepo)
 
-	if reportService != nil && authService != nil {
-		log.Printf("services ok")
+	if reportService == nil || authService == nil {
+		log.Println("[ERROR] Falha ao instanciar serviços")
+	} else {
+		log.Println("[INFO] Serviços inicializados com sucesso")
 	}
 
-	//e um handler depende de um service
+	log.Println("[INFO] Inicializando handlers...")
 	reportHandler := handler.NewReportHandler(reportService)
 	anonymousMessageHander := handler.NewAnonymousMessageHandler(reportRepo, mediaRepo, storageService)
 	authHandler := handler.NewAuthHandler(authService)
 
-	if reportHandler != nil && anonymousMessageHander != nil && authHandler != nil {
-		log.Printf("handlers ok")
+	if reportHandler == nil || anonymousMessageHander == nil || authHandler == nil {
+		log.Println("[ERROR] Falha ao instanciar handlers")
+	} else {
+		log.Println("[INFO] Handlers inicializados com sucesso")
 	}
 
 	r.POST("/send-anonymous-message", func(c *gin.Context) {
@@ -120,13 +119,9 @@ func SetupRouter() *gin.Engine {
 	adminGroup := r.Group("/messages")
 	adminGroup.Use(middleware.RequireAuth())
 	{
-		// GET  /messages               -> lista todas
-		adminGroup.GET("", reportHandler.GetAll) // corresponde a GET /messages
-		// GET  /messages/:id           -> detalhes da mensagem
+		adminGroup.GET("", reportHandler.GetAll)
 		adminGroup.GET("/:id", reportHandler.GetByID)
-		// PATCH /messages/:id/status   -> atualiza status
 		adminGroup.PATCH("/:id/status", reportHandler.PatchStatus)
-		// POST  /messages/:id/obs      -> adiciona observação
 		adminGroup.POST("/:id/obs", reportHandler.PostObs)
 	}
 
@@ -134,46 +129,47 @@ func SetupRouter() *gin.Engine {
 
 	r.GET("/reports/:id/status", func(c *gin.Context) {
 		id := c.Param("id")
-		log.Printf("req recebida para reports/%s/status\n", id)
+		log.Printf("[INFO] Requisição recebida para /reports/%s/status", id)
 
 		var report models.Report
 		result := db.First(&report, "id = ?", id)
 
 		if result.Error != nil {
-			log.Printf("erro ao buscar dados de report %s: %v\n", id, result.Error)
+			stackErr := errors.Wrap(result.Error, 0)
+			log.Printf("[ERROR] Falha ao buscar denúncia %s: %v\nStacktrace:\n%s", id, result.Error, stackErr.Stack())
 			c.JSON(http.StatusNotFound, gin.H{
 				"success": false,
-				"error":   "denuncia nao encontrada",
+				"error":   "denúncia não encontrada",
 			})
 			return
 		}
 
-		log.Printf("report econtrado: %s, status: %s\n", report.ID, report.Status)
+		log.Printf("[INFO] Denúncia encontrada: %s, status: %s", report.ID, report.Status)
 
 		c.JSON(http.StatusOK, gin.H{
 			"success": true,
 			"status":  report.Status,
 			"id":      report.ID,
 		})
-
 	})
 
 	r.Static("/foto", "./frontend")
 
 	r.NoRoute(func(c *gin.Context) {
-		log.Printf("rota nao encontrada: %s %s\n", c.Request.Method, c.Request.URL.Path)
+		log.Printf("[WARN] Rota não encontrada: %s %s", c.Request.Method, c.Request.URL.Path)
 		c.JSON(http.StatusNotFound, gin.H{
 			"success": false,
-			"error":   "rota nao encontrada",
+			"error":   "rota não encontrada",
 		})
 	})
 
-	fmt.Println("todas as rotas registradas:")
+	log.Println("[INFO] Todas as rotas registradas:")
 	for _, route := range r.Routes() {
-		fmt.Printf(" %s %s\n", route.Method, route.Path)
+		log.Printf(" %s %s", route.Method, route.Path)
 	}
 
 	r.Static("/media", "./uploads")
 
+	log.Println("[INFO] Roteador configurado com sucesso.")
 	return r
 }

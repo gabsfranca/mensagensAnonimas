@@ -8,6 +8,7 @@ import (
 	"github.com/gabsfranca/mensagensAnonimasRH/middleware"
 	"github.com/gabsfranca/mensagensAnonimasRH/service"
 	"github.com/gin-gonic/gin"
+	"github.com/go-errors/errors"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -27,14 +28,20 @@ type AuthRequest struct {
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req AuthRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		log.Printf("Erro na validação: %v", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "dados invalidos"})
+		stackErr := errors.Wrap(err, 0)
+		if stackErr != nil {
+			log.Printf("[WARN] Erro na validação de registro: %v\nStacktrace:\n%s", err, stackErr.Stack())
+		}
+		c.JSON(http.StatusBadRequest, gin.H{"error": "dados inválidos"})
 		return
 	}
 
 	err := h.authService.Register(req.Email, req.Password)
 	if err != nil {
-		log.Printf("erro ao registrar usuario: %v", err)
+		stackErr := errors.Wrap(err, 0)
+		if stackErr != nil {
+			log.Printf("[ERROR] Erro ao registrar usuário: %v\nStacktrace:\n%s", err, stackErr.Stack())
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "erro ao registrar"})
 		return
 	}
@@ -45,14 +52,20 @@ func (h *AuthHandler) Register(c *gin.Context) {
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req AuthRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		log.Printf("erro na validacao: %v", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "dados invalidos", "details": err.Error()})
+		stackErr := errors.Wrap(err, 0)
+		if stackErr != nil {
+			log.Printf("[WARN] Erro na validação de login: %v\nStacktrace:\n%s", err, stackErr.Stack())
+		}
+		c.JSON(http.StatusBadRequest, gin.H{"error": "dados inválidos", "details": err.Error()})
 		return
 	}
 
 	admin, err := h.authService.Login(req.Email, req.Password)
 	if err != nil {
-		log.Printf("erro no login: %v", err)
+		stackErr := errors.Wrap(err, 0)
+		if stackErr != nil {
+			log.Printf("[ERROR] Erro no login: %v\nStacktrace:\n%s", err, stackErr.Stack())
+		}
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "email ou senha incorretos"})
 		return
 	}
@@ -65,7 +78,10 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	tokenString, err := token.SignedString([]byte(middleware.JWTSecret))
 	if err != nil {
-		log.Printf("erro ao gerar token: %v", err)
+		stackErr := errors.Wrap(err, 0)
+		if err != nil {
+			log.Printf("[ERROR] Erro ao gerar token: %v\nStacktrace:\n%s", err, stackErr.Stack())
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "erro ao processar login"})
 		return
 	}
@@ -74,10 +90,10 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		"auth_token",
 		tokenString,
 		int(time.Hour*24*30/time.Second),
-		"/",   //path
-		"",    //domain
-		false, //Secure
-		true,  //HTTPonly
+		"/",
+		"",
+		false,
+		true,
 	)
 
 	c.JSON(http.StatusOK, gin.H{
@@ -90,12 +106,12 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	c.SetCookie(
 		"auth_token",
 		"",
-		-1, //max age negativo para expirar o cookie
-		"/",
-		"",
+		-1,
+		"/",   //path
+		"",    //domain
 		false, //secure
-		true,  //httponly
+		true,  //httpOnly
 	)
 
-	c.JSON(http.StatusOK, gin.H{"message": "logout realisado com sucesso"})
+	c.JSON(http.StatusOK, gin.H{"message": "logout realizado com sucesso"})
 }
