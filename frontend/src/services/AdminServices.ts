@@ -1,12 +1,33 @@
 import { MessageResponse, MessageStatus } from "../types";
 import { getAuthHeaders, getTokenSafely } from "./AuthServices";
+import { MediaType } from "../types";
 
 interface ApiError {
     message: string; 
     statusCode: number;
 }
 
+export interface MediaAtachment {
+    id: string;
+    url: string;
+    type: 'image' | 'video' | 'audio';
+}
+
 const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
+const mapReportToMessage = (report: any): MessageResponse => ({
+    id: report.id,
+    success: report.success,
+    content: report.message,
+    status: report.status,
+    createdAt: report.createdAt,
+    obs: report.obs,
+    media: report.media?.map((m: any) => ({
+        id: m.id,
+        url: m.url,
+        type: m.type.toLowerCase() as MediaType // Conversão para tipo compatível
+    })) || []
+});
 
 const handleResponse = async <T>(response: Response): Promise<T> => {
     if (!response.ok) {

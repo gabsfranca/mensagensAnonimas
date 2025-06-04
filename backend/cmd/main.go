@@ -70,7 +70,7 @@ func main() {
 	}
 
 	log.Printf("[INFO] Servidor ouvindo na porta %s", port)
-	fmt.Printf("sv ouvindo na porta: ", port)
+	fmt.Println("sv ouvindo na porta: ", port)
 	if err := server.ListenAndServe(); err != nil {
 		stackErr := errors.Wrap(err, 0)
 		if stackErr != nil {

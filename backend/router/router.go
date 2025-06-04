@@ -30,7 +30,7 @@ func SetupRouter() *gin.Engine {
 	}
 
 	r.Use(func(c *gin.Context) {
-		origin := c.Request.Header.Get("origin")
+		origin := c.Request.Header.Get("Origin")
 
 		if allowedOrigins[origin] {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
@@ -108,6 +108,11 @@ func SetupRouter() *gin.Engine {
 		log.Println("[INFO] Handlers inicializados com sucesso")
 	}
 
+	// ===== ROTAS ESTÁTICAS PRIMEIRO =====
+	r.Static("/media", "./uploads")
+	r.Static("/foto", "./frontend")
+
+	// ===== ROTAS DA API =====
 	r.POST("/send-anonymous-message", func(c *gin.Context) {
 		anonymousMessageHander.Handle(c)
 	})
@@ -153,8 +158,7 @@ func SetupRouter() *gin.Engine {
 		})
 	})
 
-	r.Static("/foto", "./frontend")
-
+	// ===== MIDDLEWARE DE FALLBACK POR ÚLTIMO =====
 	r.NoRoute(func(c *gin.Context) {
 		log.Printf("[WARN] Rota não encontrada: %s %s", c.Request.Method, c.Request.URL.Path)
 		c.JSON(http.StatusNotFound, gin.H{
@@ -167,8 +171,6 @@ func SetupRouter() *gin.Engine {
 	for _, route := range r.Routes() {
 		log.Printf(" %s %s", route.Method, route.Path)
 	}
-
-	r.Static("/media", "./uploads")
 
 	log.Println("[INFO] Roteador configurado com sucesso.")
 	return r

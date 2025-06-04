@@ -1,6 +1,7 @@
 import { For, createSignal, onMount, Show, createEffect } from 'solid-js';
 import { MessageResponse, MessageStatus } from '../types';
 import { Spinner } from './spinner';
+import { MediaViewer } from './MediaViewer'; // ADICIONE ESTA IMPORTAÇÃO
 import { fetchMessages, updateMessageStatus, addMessageObs } from '../services/AdminServices';
 import { isAuthenticated } from '../services/AuthServices';
 import './AdminPanel.css'
@@ -180,35 +181,8 @@ const AdminPanel = () => {
                                         <p class="message-content">{message.content}</p>
                                     </div>
 
-                                    <Show when={message.media && message.media.length > 0}>
-                                        <div class="media-section">
-                                            <h3>Anexos:</h3>
-                                            <div class="media-grid">
-                                                <For each={message.media}>
-                                                    {(media) => (
-                                                        <div class="media-item">
-                                                            <Show
-                                                                when={media.type === 'image'}
-                                                                fallback={
-                                                                    media.type === 'video' ? (
-                                                                        <video controls src={media.url} />
-                                                                    ) : (
-                                                                        <audio controls src={media.url} />
-                                                                    )
-                                                                }
-                                                            >
-                                                                <img 
-                                                                    src={media.thumbnail || media.url} 
-                                                                    alt="Anexo" 
-                                                                    class="media-content"
-                                                                />
-                                                            </Show>
-                                                        </div>
-                                                    )}
-                                                </For>
-                                            </div>
-                                        </div>
-                                    </Show>
+                                    {/* SUBSTITUA ESTA PARTE PELO MEDIAVIEWER */}
+                                    <MediaViewer media={message.media || []} />
 
                                     <div class="observations-section">
                                         <h3>Observações:</h3>

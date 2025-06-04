@@ -16,6 +16,7 @@ type ReportRepo interface {
 	GetObsById(ctx context.Context, id string) (string, error)
 	UpdateStatus(ctx context.Context, id string, status models.Status) error
 	UpdateObs(ctx context.Context, id string, obs string) error
+	FindByIdWithMedia(ctx context.Context, id string) (*models.Report, error)
 }
 
 type GormReportRepo struct {
@@ -33,7 +34,7 @@ func (r *GormReportRepo) Create(ctx context.Context, report *models.Report) erro
 func (r *GormReportRepo) FindAll(ctx context.Context) ([]models.Report, error) {
 	var reports []models.Report
 	err := r.db.WithContext(ctx).
-		Preload("Medias").
+		Preload("Media").
 		Order("created_at desc").
 		Find(&reports).Error
 	return reports, err
@@ -42,7 +43,7 @@ func (r *GormReportRepo) FindAll(ctx context.Context) ([]models.Report, error) {
 func (r *GormReportRepo) FindByID(ctx context.Context, id string) (*models.Report, error) {
 	var report models.Report
 	err := r.db.WithContext(ctx).
-		Preload("Medias").
+		Preload("Media").
 		First(&report, "id = ?", id).Error
 	if err != nil {
 		return nil, err
@@ -84,4 +85,13 @@ func (r *GormReportRepo) UpdateObs(ctx context.Context, id string, obs string) e
 		Model(&report).
 		Update("obs", obs).
 		Error
+}
+
+func (r *GormReportRepo) FindByIdWithMedia(ctx context.Context, id string) (*models.Report, error) {
+	var report models.Report
+
+	err := r.db.WithContext(ctx).
+		Preload("Media").
+		First(&report, "id = ?", id).Error
+	return &report, err
 }

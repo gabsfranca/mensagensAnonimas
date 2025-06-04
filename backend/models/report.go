@@ -20,7 +20,7 @@ type Report struct {
 	Message   string    `gorm:"type:text;not null" json:"content"`
 	Status    Status    `gorm:"type:varchar(20);default:'recebido'" json:"status"`
 	Obs       string    `gorm:"type:text;" json:"obs"`
-	Medias    []Media   `gorm:"foreignKey:ReportId" json:"media"`
+	Media     []Media   `gorm:"foreignKey:ReportId" json:"media"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 

@@ -54,9 +54,9 @@ export const MessageForm = (): JSX.Element => {
                     navigator.clipboard.writeText(result.id);
                 } else {
                     setAlertMessage('erro ao copiar texto para a área de trabalho')
+                    setMessage(`copie seu código: ${result.id}`);
                 }
-              }
-              setMessage(`copie seu código: ${result.id}`);
+            }
               setFiles([]);
               setAlertMessage('');
             } else {

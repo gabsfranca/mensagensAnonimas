@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gabsfranca/mensagensAnonimasRH/config"
 	"github.com/gabsfranca/mensagensAnonimasRH/models"
 	"github.com/gabsfranca/mensagensAnonimasRH/repo"
 	"github.com/gabsfranca/mensagensAnonimasRH/service"
@@ -58,6 +59,11 @@ func (h *AnonymousMessageHandler) Handle(c *gin.Context) {
 
 	mediaURLs := h.Service.SaveMediaFiles(form.Files)
 
+	baseUrl := config.GetEnvVar("BASE_URL")
+	if baseUrl == "" {
+		baseUrl = "http://" + c.Request.Host
+	}
+
 	for _, media := range mediaURLs {
 		m := models.Media{
 			ReportId:  report.ID,
@@ -74,7 +80,7 @@ func (h *AnonymousMessageHandler) Handle(c *gin.Context) {
 		}
 	}
 
-	updated, err := h.ReportRepo.FindByID(c.Request.Context(), report.ID)
+	updated, err := h.ReportRepo.FindByIdWithMedia(c.Request.Context(), report.ID)
 	if err != nil {
 		stackErr := errors.Wrap(err, 0)
 		if stackErr != nil {
@@ -84,5 +90,43 @@ func (h *AnonymousMessageHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, updated)
+	baseUrl = config.GetEnvVar("BASE_URL")
+	if baseUrl == "" {
+		baseUrl = "http://" + c.Request.Host
+	}
+
+	type MediaResponse struct {
+		ID        string    `json:"id"`
+		ReportId  string    `json:"reportId"`
+		URL       string    `json:"url"`
+		Type      string    `json:"type"`
+		CreatedAt time.Time `json:"createdAt"`
+	}
+
+	mediaResponses := make([]MediaResponse, len(updated.Media))
+	for i, m := range updated.Media {
+		mediaResponses[i] = MediaResponse{
+			ID:        m.ID,
+			ReportId:  m.ReportId,
+			URL:       baseUrl + m.URL,
+			Type:      string(m.Type),
+			CreatedAt: m.CreatedAt,
+		}
+	}
+
+	response := struct {
+		ID        string          `json:"id"`
+		Message   string          `json:"message"`
+		Status    string          `json:"status"`
+		CreatedAt time.Time       `json:"createdAt"`
+		Media     []MediaResponse `json:"media"`
+	}{
+		ID:        updated.ID,
+		Message:   updated.Message,
+		Status:    string(updated.Status),
+		CreatedAt: updated.CreatedAt,
+		Media:     mediaResponses,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
