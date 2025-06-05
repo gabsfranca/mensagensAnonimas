@@ -24,9 +24,9 @@ const App: Component = () => {
         <Route path="/login" component={() => 
             isAuthenticated() ? <Navigate href="/admin" /> : <AdminLogin />
         } />
-        <Route path="/register" component={() => 
+        {/* <Route path="/register" component={() => 
           isAuthenticated() ? <Navigate href="/admin" /> : <AdminRegister />
-        } />
+        } /> */}
         
         <Route path="/admin" component={() => 
           <AuthGuard>

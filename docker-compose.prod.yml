@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  frontend:
+    image: $DOCKERHUB_USERNAME/app-frontend:latest
+    restart: always
+    environment:
+      VITE_BACKEND_URL: http://backend:8080
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15
+    restart: always
+    env_file: .env  # Arquivo gerenciado pela empresa
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  backend:
+    image: $DOCKERHUB_USERNAME/app-backend:latest
+    restart: always
+    depends_on:
+      - db
+    env_file: .env  # Arquivo gerenciado pela empresa
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      GIN_MODE: release
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:

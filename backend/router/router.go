@@ -117,7 +117,7 @@ func SetupRouter() *gin.Engine {
 		anonymousMessageHander.Handle(c)
 	})
 
-	r.POST("/register", authHandler.Register)
+	// r.POST("/register", authHandler.Register)
 	r.POST("/login", authHandler.Login)
 	r.POST("/logout", authHandler.Logout)
 
