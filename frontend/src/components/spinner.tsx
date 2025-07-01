@@ -1,4 +1,5 @@
 import { JSX } from 'solid-js';
+import '../styles/components/Spinner.css'
 
 interface SpinnerProps {
     show: boolean;

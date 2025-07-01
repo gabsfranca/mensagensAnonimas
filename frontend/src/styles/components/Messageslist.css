@@ -1,0 +1,77 @@
+.messages-list {
+  width: 280px;
+  min-width: 280px;
+  background-color: #ecf3fa;
+  padding: 0.75rem;
+  border-right: 1px solid #cbd5e0;
+  overflow-y: auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.messages-list h2 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #1a3c61;
+}
+
+/* Cards de mensagem */
+.message-card {
+  background-color: #fff;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s, border 0.2s;
+}
+
+.message-card:hover {
+  background-color: #f8fbff;
+  border-color: #a0b3cc;
+}
+
+.message-card.selected {
+  border-color: #2b6cb0;
+  background-color: #ebf8ff;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #cce5ff;
+  color: #2b6cb0;
+}
+
+.status-badge.recebido {
+  background-color: #c3dafe;
+  color: #2c5282;
+}
+
+.status-badge.em-análise {
+  background-color: #bee3f8;
+  color: #2b6cb0;
+}
+
+.status-badge.concluído {
+  background-color: #c6f6d5;
+  color: #22543d;
+}
+
+.message-preview p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #2c3e50;
+  line-height: 1.4;
+}
+
+.media-indicator {
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 0.25rem;
+}

@@ -10,6 +10,7 @@ export interface MediaAtachment {
 
 export interface MessageResponse {
     id?: string;
+    shortId?: string;
     success: boolean; 
     error?: string; 
     content: string;
@@ -18,6 +19,12 @@ export interface MessageResponse {
     media?: MediaAtachment[], 
     createdAt?: string;
     updatedAt?: string;
+    tags?: Tag[];
+}
+
+export type Tag = {
+    id: string;
+    Name: string;
 }
 
 

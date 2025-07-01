@@ -1,8 +1,6 @@
 import { createSignal, JSX } from 'solid-js'; 
 import { sendAnonymousMessage } from '../services/messageServices';
 import { Spinner } from './spinner';
-import { generateId } from '../utils/idGenerator';
-import { send } from 'vite';
 
 export const MessageForm = (): JSX.Element => {
     //createSignal é tipo o useState do React 
@@ -45,16 +43,27 @@ export const MessageForm = (): JSX.Element => {
 
             const result = await sendAnonymousMessage(formData);
 
+            console.log('result:\n', result);
+
             if (result.success) {
+              const shortId = result.shortId || result.id
+
+              console.log('shortid: ', result.shortId);
+
+              if (shortId === result.id) {
+                console.log('nao deu pra pegar o shortId')
+              }
+
               alert(
                 `Mensagem enviada com sucesso!\nID copiado para sua área de transferência! Guarde ele, é importante.`
               );
-              if (result.id) {
+
+              if (shortId) {
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(result.id);
+                    navigator.clipboard.writeText(shortId);
                 } else {
                     setAlertMessage('erro ao copiar texto para a área de trabalho')
-                    setMessage(`copie seu código: ${result.id}`);
+                    setMessage(`copie seu código: ${shortId}`);
                 }
             }
               setFiles([]);

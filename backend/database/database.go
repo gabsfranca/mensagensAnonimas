@@ -64,14 +64,50 @@ func NewPostgresConnection(host, user, password, dbname, port string) (*gorm.DB,
 	return nil, fmt.Errorf("falha desconhecida após %d tentativas", maxRetries)
 }
 
+func SeedTags(db *gorm.DB) error {
+	tags := []models.Tag{
+		{Name: models.AssedioMoral},
+		{Name: models.AssedioSexual},
+		{Name: models.AssedioOrganizacional},
+		{Name: models.ConflitoInteresses},
+		{Name: models.Irregularidades},
+		{Name: models.DesrespeitoNormas},
+		{Name: models.CondutasAntieticas},
+		{Name: models.AtosDiscriminatorios},
+		{Name: models.Outros},
+		{Name: models.OcorrenciaInveridica},
+	}
+
+	for _, tag := range tags {
+		var count int64
+		db.Model(&models.Tag{}).Where("name = ?", tag.Name).Count(&count)
+		if count == 0 {
+			if err := db.Create(&tag).Error; err != nil {
+				log.Printf("Erro ao criar tag %s: %v", tag.Name, err)
+			} else {
+				log.Printf("Tag %s criada com sucesso", tag.Name)
+			}
+		}
+	}
+	return nil
+}
+
 func AutoMigrate(db *gorm.DB) error {
 	log.Println("executando migracoes...")
-	err := db.AutoMigrate(&models.Report{}, &models.Media{}, &models.Admin{})
+	err := db.AutoMigrate(
+		&models.Report{},
+		&models.Media{},
+		&models.Admin{},
+		&models.Tag{},
+		&models.Observation{},
+	)
 	if err != nil {
-		// Correção: verificar se o erro não é nil antes de usar Wrap
+		// Correção: verificar se o erro não é nil antes de usar WrapAC
 		stackErr := errors.Wrap(err, 1)
 		log.Printf("[ERROR] AutoMigrate falhou: %s\nStacktrace:\n%s",
 			err.Error(), stackErr.Error())
+		return stackErr
 	}
-	return err
+	log.Println("migrações concluídas com sucesso!")
+	return nil
 }

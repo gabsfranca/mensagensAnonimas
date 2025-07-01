@@ -13,6 +13,7 @@ type ReportService interface {
 	ChangeStatus(ctx context.Context, id string, status models.Status) error
 	AddObs(ctx context.Context, id string, obs string) error
 	GetObs(ctx context.Context, id string) (string, error)
+	AddTags(ctx context.Context, reportID string, tagIDs []string) error
 }
 
 type reportService struct {
@@ -41,4 +42,8 @@ func (s *reportService) ChangeStatus(ctx context.Context, id string, status mode
 
 func (s *reportService) AddObs(ctx context.Context, id string, obs string) error {
 	return s.repo.UpdateObs(ctx, id, obs)
+}
+
+func (s *reportService) AddTags(ctx context.Context, reportID string, tagIDs []string) error {
+	return s.repo.AddTags(ctx, reportID, tagIDs)
 }

@@ -17,57 +17,17 @@ interface MediaViewerProps {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 const getMediaComponent = (media: MediaAtachment): JSX.Element => {
-    console.log('🎬 Renderizando mídia:', media);
-
-    // 2. Construa as URLs completas corretamente
     const fullUrl = `${API_BASE_URL}${media.url}`;
-    const fullThumbnail = media.thumbnail ? `${API_BASE_URL}${media.thumbnail}` : null;
-    
-    console.log(`fullUrl: ${fullUrl}`);
-    console.log(`fullThumbnail: ${fullThumbnail}`);
-    
-    switch(media.type) {
-        case 'image': 
-            return (
-                <img
-                    src={fullThumbnail || fullUrl}  // Use a URL completa
-                    alt="Anexo de imagem"
-                    class="media-content"
-                    loading="lazy"
-                    onLoad={() => console.log('✅ Imagem carregada:', fullUrl)}
-                    onError={(e) => console.error('❌ Erro ao carregar imagem:', fullUrl, e)}
-                />
-            );
-        case 'video': 
-            return(
-                <video 
-                    controls 
-                    class="media-content"
-                    onLoadedData={() => console.log('✅ Vídeo carregado:', fullUrl)}
-                    onError={(e) => console.error('❌ Erro ao carregar vídeo:', fullUrl, e)}
-                >
-                    {/* 3. Corrija para usar a URL completa no source */}
-                    <source src={fullUrl} type={`video/${media.url.split('.').pop()}`} />
-                    Seu navegador não suporta o elemento de vídeo.
-                </video>
-            );
-        case 'audio':
-            return(
-                <audio 
-                    controls 
-                    class="media-content"
-                    onLoadedData={() => console.log('✅ Áudio carregado:', fullUrl)}
-                    onError={(e) => console.error('❌ Erro ao carregar áudio:', fullUrl, e)}
-                >
-                    {/* 4. Corrija para usar a URL completa no source */}
-                    <source src={fullUrl} type={`audio/${media.url.split('.').pop()}`} />
-                    Seu navegador não suporta o elemento de áudio.
-                </audio>
-            );
-        default:
-            console.warn('⚠️ Tipo de mídia não suportado:', media.type);
-            return <div>Tipo de mídia não suportado: {media.type}</div>
-    }
+    return (
+        <a
+            href={fullUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            class='media.link'
+        >
+            Abrir {media.type} ({media.url.split('/').pop()})
+        </a>
+    )
 };
 
 export const MediaViewer = (props: MediaViewerProps) => {

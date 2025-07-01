@@ -130,3 +130,28 @@ func (h *ReportHandler) PostObs(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, report)
 }
+
+func (h *ReportHandler) AddTags(c *gin.Context) {
+	id := c.Param("id")
+	var body struct {
+		TagIDs []string `json:"tagIds" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "dados inválidos"})
+		return
+	}
+
+	if err := h.Service.AddTags(c.Request.Context(), id, body.TagIDs); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "falha ao adicionar etiqueta(s)"})
+		return
+	}
+
+	report, err := h.Service.GetByID(c.Request.Context(), id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "falha ao buscar registro atualizado"})
+		return
+	}
+
+	c.JSON(http.StatusOK, report)
+}

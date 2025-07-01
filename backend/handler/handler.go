@@ -116,12 +116,14 @@ func (h *AnonymousMessageHandler) Handle(c *gin.Context) {
 
 	response := struct {
 		ID        string          `json:"id"`
+		ShortID   string          `json:"shortId"`
 		Message   string          `json:"message"`
 		Status    string          `json:"status"`
 		CreatedAt time.Time       `json:"createdAt"`
 		Media     []MediaResponse `json:"media"`
 	}{
 		ID:        updated.ID,
+		ShortID:   updated.ShortID,
 		Message:   updated.Message,
 		Status:    string(updated.Status),
 		CreatedAt: updated.CreatedAt,

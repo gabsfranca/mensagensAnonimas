@@ -76,10 +76,19 @@ func SetupRouter() *gin.Engine {
 		}
 	}
 
+	log.Println("[INFO] Populando banco de dados com as tags...")
+	if err := database.SeedTags(db); err != nil {
+		stackErr := errors.Wrap(err, 0)
+		if stackErr != nil {
+			log.Fatalf("[FATAL] Erro ao popular a tabela: %v\nStacktrace:\n%s", err, stackErr.Stack())
+		}
+	}
+
 	log.Println("[INFO] Inicializando repositórios...")
 	reportRepo := repo.NewGormReportRepo(db)
 	mediaRepo := repo.NewGormMediaRepo(db)
 	adminRepo := repo.NewGormAdminRepo(db)
+	observationRepo := repo.NewGormObservationRepo(db)
 
 	if reportRepo == nil || mediaRepo == nil || adminRepo == nil {
 		log.Println("[ERROR] Falha ao instanciar repositórios")
@@ -90,6 +99,7 @@ func SetupRouter() *gin.Engine {
 	log.Println("[INFO] Inicializando serviços...")
 	reportService := service.NewReportService(reportRepo)
 	authService := service.NewAuthService(adminRepo)
+	tagService := service.NewTagService(repo.NewGormTagRepo(db))
 
 	if reportService == nil || authService == nil {
 		log.Println("[ERROR] Falha ao instanciar serviços")
@@ -101,6 +111,8 @@ func SetupRouter() *gin.Engine {
 	reportHandler := handler.NewReportHandler(reportService)
 	anonymousMessageHander := handler.NewAnonymousMessageHandler(reportRepo, mediaRepo, storageService)
 	authHandler := handler.NewAuthHandler(authService)
+	tagHandler := handler.NewTagHandler(tagService)
+	observationHandler := handler.NewObservationHandler(observationRepo, reportRepo)
 
 	if reportHandler == nil || anonymousMessageHander == nil || authHandler == nil {
 		log.Println("[ERROR] Falha ao instanciar handlers")
@@ -117,27 +129,33 @@ func SetupRouter() *gin.Engine {
 		anonymousMessageHander.Handle(c)
 	})
 
-	// r.POST("/register", authHandler.Register)
+	r.POST("/reports/:id/observations", observationHandler.PostUserObservation)
+
+	r.POST("/register", authHandler.Register)
 	r.POST("/login", authHandler.Login)
 	r.POST("/logout", authHandler.Logout)
 
 	adminGroup := r.Group("/messages")
 	adminGroup.Use(middleware.RequireAuth())
 	{
+		adminGroup.POST("/reports/:id/tags", reportHandler.AddTags)
+		adminGroup.POST("/reports/:id/observations", observationHandler.PostAdminObservation)
 		adminGroup.GET("", reportHandler.GetAll)
 		adminGroup.GET("/:id", reportHandler.GetByID)
+		adminGroup.GET("/tags", tagHandler.GetAvailableTags)
+		adminGroup.GET("/tags/stats", tagHandler.GetTagStats)
 		adminGroup.PATCH("/:id/status", reportHandler.PatchStatus)
-		adminGroup.POST("/:id/obs", reportHandler.PostObs)
+		adminGroup.DELETE("/:messageId/tags/:tagId", tagHandler.RemoveTagFromMessage)
 	}
 
-	r.GET("/messages/:id/obs", reportHandler.GetObs)
+	r.GET("/reports/:id/observations", observationHandler.GetObservations)
 
 	r.GET("/reports/:id/status", func(c *gin.Context) {
 		id := c.Param("id")
 		log.Printf("[INFO] Requisição recebida para /reports/%s/status", id)
 
 		var report models.Report
-		result := db.First(&report, "id = ?", id)
+		result := db.First(&report, "short_id = ?", id)
 
 		if result.Error != nil {
 			stackErr := errors.Wrap(result.Error, 0)

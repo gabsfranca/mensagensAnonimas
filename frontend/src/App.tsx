@@ -5,6 +5,7 @@ import { isAuthenticated } from './services/AuthServices';
 import AuthGuard from './components/AuthGuard';
 import AdminPanel from './components/AdminPanel';
 import UserLayout from './layouts/UserLayout';
+import Dashboard from './layouts/DashboardLayout';
 
 import './styles/global.css';
 
@@ -24,9 +25,9 @@ const App: Component = () => {
         <Route path="/login" component={() => 
             isAuthenticated() ? <Navigate href="/admin" /> : <AdminLogin />
         } />
-        {/* <Route path="/register" component={() => 
+        <Route path="/register" component={() => 
           isAuthenticated() ? <Navigate href="/admin" /> : <AdminRegister />
-        } /> */}
+        } />
         
         <Route path="/admin" component={() => 
           <AuthGuard>
@@ -36,6 +37,11 @@ const App: Component = () => {
         <Route path="/admin/*" component={() => 
           <AuthGuard>
             <AdminPage />
+          </AuthGuard>
+        } />
+        <Route path="/admin/dashboard" component={() =>
+          <AuthGuard>
+            <Dashboard />
           </AuthGuard>
         } />
     </Router>

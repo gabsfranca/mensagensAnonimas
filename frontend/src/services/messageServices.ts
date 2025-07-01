@@ -14,6 +14,7 @@ export const sendAnonymousMessage = async (formData: FormData): Promise<MessageR
         if (!response.ok) {
             return {
                 success: false,
+                shortId: result.shortId,
                 error: result.error || 'Erro desconhecido',
                 content: result.content,
                 status: result.status,
@@ -22,6 +23,7 @@ export const sendAnonymousMessage = async (formData: FormData): Promise<MessageR
 
         return {
             id: result.id,
+            shortId: result.shortId,
             success: true,
             content: result.content,
             status: result.status,

@@ -17,6 +17,7 @@ type ReportRepo interface {
 	UpdateStatus(ctx context.Context, id string, status models.Status) error
 	UpdateObs(ctx context.Context, id string, obs string) error
 	FindByIdWithMedia(ctx context.Context, id string) (*models.Report, error)
+	AddTags(ctx context.Context, reportID string, tagIDs []string) error
 }
 
 type GormReportRepo struct {
@@ -44,6 +45,7 @@ func (r *GormReportRepo) FindByID(ctx context.Context, id string) (*models.Repor
 	var report models.Report
 	err := r.db.WithContext(ctx).
 		Preload("Media").
+		Preload("Tags").
 		First(&report, "id = ?", id).Error
 	if err != nil {
 		return nil, err
@@ -94,4 +96,17 @@ func (r *GormReportRepo) FindByIdWithMedia(ctx context.Context, id string) (*mod
 		Preload("Media").
 		First(&report, "id = ?", id).Error
 	return &report, err
+}
+
+func (r *GormReportRepo) AddTags(ctx context.Context, reportID string, tagIDs []string) error {
+	report := models.Report{ID: reportID}
+	tags := []models.Tag{}
+	for _, tagID := range tagIDs {
+		var tag models.Tag
+		if err := r.db.WithContext(ctx).First(&tag, "id = ?", tagID).Error; err != nil {
+			return err
+		}
+		tags = append(tags, tag)
+	}
+	return r.db.WithContext(ctx).Model(&report).Association("Tags").Append(tags)
 }

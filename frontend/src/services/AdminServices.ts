@@ -1,6 +1,7 @@
-import { MessageResponse, MessageStatus } from "../types";
+import { MessageResponse, MessageStatus, Tag } from "../types"; 
 import { getAuthHeaders, getTokenSafely } from "./AuthServices";
 import { MediaType } from "../types";
+import { exceptions } from "winston";
 
 interface ApiError {
     message: string; 
@@ -26,7 +27,8 @@ const mapReportToMessage = (report: any): MessageResponse => ({
         id: m.id,
         url: m.url,
         type: m.type.toLowerCase() as MediaType // Conversão para tipo compatível
-    })) || []
+    })) || [],
+    tags: report.tags 
 });
 
 const handleResponse = async <T>(response: Response): Promise<T> => {
@@ -118,12 +120,12 @@ export const addMessageObs = async (
 ): Promise<MessageResponse> => {
     try {
         console.log(`adicionando obs a msg ${id}`);
-        const response = await makeAuthenticatedRequest(`${URL}/messages/${id}/obs`, {
+        const response = await makeAuthenticatedRequest(`${URL}/messages/reports/${id}/observations`, {
             method: 'POST', 
             headers: {
                 'Content-Type':'application/json',
             },
-            body: JSON.stringify({ obs }),
+            body: JSON.stringify({ content: obs }),
         });
         const result = await handleResponse<MessageResponse>(response);
         console.log('obs add com successooooo');
@@ -161,3 +163,46 @@ export const getMessageDetails = async (
         throw e;
     }
 };
+
+export const fetchAvailableTags = async (): Promise<Tag[]> => {
+    try {
+        console.log('Buscando tags disponiceis...');
+        const response = await makeAuthenticatedRequest(`${URL}/messages/tags`, {
+            method: 'GET',
+        });
+
+        console.log('tags recebidas: ', response);
+
+        const result = await handleResponse<Tag[]>(response);
+        console.log(`${result.length} tags carregadas`);
+        return result;
+    } catch (e) {
+        console.error(`Erro ao buscar tags: ${e}`);
+        throw e;
+    }
+};
+
+export const addTagsToReport = async (
+    reportId: string,
+    tagIds: string[]
+): Promise<MessageResponse> => {
+    try {
+        console.log(`Adicionando tags ao report ${reportId}: ${tagIds.join(', ')}`);
+        const response = await makeAuthenticatedRequest(`${URL}/messages/reports/${reportId}/tags`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tagIds }),
+        });
+        
+        
+        const result = await handleResponse<MessageResponse>(response);
+        console.log('resposta completa: ', result);
+        console.log('tags adicionadas com sucesso', result.tags);
+        return result;
+    } catch (e) {
+        console.error('falha ao adicionar tags: ', e);
+        throw e;
+    }
+}
