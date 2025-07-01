@@ -17,6 +17,7 @@ const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 const AdminPanel = () => {
   const auth = useAuth();
   const messages = useMessages();
+  const observations = messages.observations;
   const tags = useTags();
 
   const {
@@ -144,6 +145,7 @@ const AdminPanel = () => {
             }
           }}
           onAddObservation={messages.addObservation}
+          observations={observations()}
         />
 
         <TagsSection 

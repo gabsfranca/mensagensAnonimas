@@ -1,5 +1,5 @@
 import { Show, For } from 'solid-js';
-import { MessageResponse, MessageStatus } from '../types';
+import { MessageResponse, MessageStatus, Observation } from '../types';
 import { MediaViewer } from './MediaViewer';
 import '../styles/components/MessageDetail.css'
 
@@ -7,6 +7,7 @@ interface MessageDetailProps {
   message: MessageResponse | null;
   onStatusChange: (status: MessageStatus) => void;
   onAddObservation: (text: string) => void;
+  observations: Observation[];
 }
 
 export const MessageDetail = (props: MessageDetailProps) => {
@@ -52,6 +53,14 @@ export const MessageDetail = (props: MessageDetailProps) => {
 
             <div class="observations-section">
               <h3>Observações:</h3>
+              <For each={props.observations}>
+                {(obs) => (
+                  <div class="observation-message">
+                    <p><strong>{obs.author}:</strong> {obs.content}</p>
+                    <small>{new Date(obs.createdAt).toLocaleString()}</small>
+                  </div>
+                )}
+              </For>
               <form onSubmit={handleObservationSubmit}>
                 <textarea
                   name="observation"

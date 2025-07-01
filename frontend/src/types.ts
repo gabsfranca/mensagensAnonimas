@@ -28,6 +28,14 @@ export type Tag = {
 }
 
 
+export interface Observation {
+  id: string;
+  reportId: string;
+  author: string;
+  content: string;
+  createdAt: string;
+}
+
 // export interface MessageData {
 //     id: string
 //     content: string; 
