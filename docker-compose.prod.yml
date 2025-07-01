@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   frontend:
-    image: $DOCKERHUB_USERNAME/app-frontend:latest
+    image: ghcr.io/gabsfranca/app-frontend:latest
     restart: always
     environment:
       VITE_BACKEND_URL: http://backend:8080
@@ -21,7 +21,7 @@ services:
       - app-network
 
   backend:
-    image: $DOCKERHUB_USERNAME/app-backend:latest
+    image: ghcr.io/gabsfranca/app-backend:latest
     restart: always
     depends_on:
       - db

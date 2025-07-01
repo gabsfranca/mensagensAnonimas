@@ -2,10 +2,10 @@ FROM golang:1.23.7-alpine
 
 WORKDIR /app
 
-COPY backend/go.mod backend/go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
 
-COPY backend ./
+COPY . .
 
 WORKDIR /app/cmd
 
