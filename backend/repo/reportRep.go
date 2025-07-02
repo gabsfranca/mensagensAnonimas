@@ -36,6 +36,7 @@ func (r *GormReportRepo) FindAll(ctx context.Context) ([]models.Report, error) {
 	var reports []models.Report
 	err := r.db.WithContext(ctx).
 		Preload("Media").
+		Preload("Tags").
 		Order("created_at desc").
 		Find(&reports).Error
 	return reports, err
