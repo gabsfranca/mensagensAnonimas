@@ -119,21 +119,17 @@ const AdminPanel = () => {
           }}
         />
         
-        <TagFilters
-          onFilterChange={setActiveTagFilters}
-        />
-        
-        <input
-            type="text"
-            class="search-input"
-            placeholder="Buscar por palavra-chave..."
-            value={searchTerm()}
-            onInput={(e) => setSearchTerm(e.currentTarget.value)}
-          />
         <MessagesList 
           messages={filteredMessages()}
           selectedMessageId={messages.selectedMessageId()}
           onSelectMessage={messages.selectMessage}
+          searchTerm={searchTerm()}
+          onSearchChange={(value) => setSearchTerm(value)}
+          onFilterChange={setActiveTagFilters}
+          availableTags={tags.availableTags()}
+          selectedTags={tags.selectedTags()}
+          loadTags={tags.loadTags}
+          isLoading={tags.isLoading()}
         />
 
         <MessageDetail 

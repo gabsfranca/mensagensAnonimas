@@ -1,16 +1,12 @@
 .admin-container {
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
   height: 100vh;
   width: 100vw;
-  align-content: flex-start;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 }
 
 .admin-container > * {
-  flex: 1 1 33.33%;
   min-width: 0;
-  max-width: 33.33%;
-  height: auto !important;
   overflow-y: auto;
   height: 100%;
 }
