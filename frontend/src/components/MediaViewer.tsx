@@ -13,10 +13,15 @@ interface MediaViewerProps {
     media: MediaAtachment[];
 }
 
-// 1. Defina a URL base da API como constante
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+//const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
+//const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
 const getMediaComponent = (media: MediaAtachment): JSX.Element => {
+
+  
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"
+
     const fullUrl = `${API_BASE_URL}${media.url}`;
     return (
         <a

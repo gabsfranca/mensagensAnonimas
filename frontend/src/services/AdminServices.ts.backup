@@ -12,9 +12,9 @@ export interface MediaAtachment {
     id: string;
     url: string;
     type: 'image' | 'video' | 'audio';
-}
 
-const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
+//const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
 const mapReportToMessage = (report: any): MessageResponse => ({
     id: report.id,
@@ -72,6 +72,9 @@ const makeAuthenticatedRequest = async (url: string, options: RequestInit = {}) 
 };
 
 export const fetchMessages = async (): Promise<MessageResponse[]> => {
+
+    const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+    
     try {
         console.log('buscando msgs...');
         const response = await makeAuthenticatedRequest(`${URL}/messages`, {
@@ -92,7 +95,9 @@ export const updateMessageStatus = async (
     id: string, 
     status: MessageStatus
 ): Promise<MessageResponse> => {
-    try {
+    
+  const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"
+  try {
         console.log(`atualizando status da msg ${id} para ${status}`)
         const response = await makeAuthenticatedRequest(`${URL}/messages/${id}/status`, {
             method: 'PATCH', 
@@ -118,6 +123,8 @@ export const addMessageObs = async (
     id: string, 
     obs: string
 ): Promise<MessageResponse> => {
+
+    const URL = import.meta.env.VITE_BACKEND_URL || "htt://localhost:8080";
     try {
         console.log(`adicionando obs a msg ${id}`);
         const response = await makeAuthenticatedRequest(`${URL}/messages/reports/${id}/observations`, {
@@ -137,6 +144,7 @@ export const addMessageObs = async (
 };
 
 export const getMessageObs = async(id: string): Promise<MessageResponse> => {
+    const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"
     try {
         console.log('buscando obs da msg: ', id);
         const response = await fetch(`${URL}/messages/${id}/obs`, {
@@ -152,6 +160,7 @@ export const getMessageObs = async(id: string): Promise<MessageResponse> => {
 export const getMessageDetails = async (
     id: string
 ): Promise<MessageResponse> => {
+    const URL = import.meta.env.VITE_BACKEND_URL || "htto://localhost:8080"
     try{
         console.log(`buscando detalhes da msg: ${id}`);
         const response = await makeAuthenticatedRequest(`${URL}/messages/${id}`, {
@@ -165,6 +174,7 @@ export const getMessageDetails = async (
 };
 
 export const fetchAvailableTags = async (): Promise<Tag[]> => {
+    const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"
     try {
         console.log('Buscando tags disponiceis...');
         const response = await makeAuthenticatedRequest(`${URL}/messages/tags`, {
@@ -186,6 +196,7 @@ export const addTagsToReport = async (
     reportId: string,
     tagIds: string[]
 ): Promise<MessageResponse> => {
+    const URL = import.meta.env.VITE_BACKEND_URL || "http:localhost:8080"
     try {
         console.log(`Adicionando tags ao report ${reportId}: ${tagIds.join(', ')}`);
         const response = await makeAuthenticatedRequest(`${URL}/messages/reports/${reportId}/tags`, {
